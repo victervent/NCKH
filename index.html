@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>NCKH Studio – Trợ lý nghiên cứu khoa học</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f2f6fb;--card:rgba(255,255,255,.78);--tx:#0f1b3d;--mut:#5b6785;--bd:rgba(15,27,61,.12);--inp:#fff;--gl:rgba(15,27,61,.05);--a:#0fa89a;--b:#3b5bdb;--c:#ffb703;--r:#ff5d73;--sh:0 12px 32px rgba(15,27,61,.09);--x:50%;--y:20%;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#09112a;--card:rgba(20,32,66,.72);--tx:#e6ecff;--mut:#9aa8d0;--bd:rgba(150,170,255,.18);--inp:rgba(255,255,255,.06);--gl:rgba(150,170,255,.06);--sh:0 12px 32px rgba(0,0,0,.4)}}
+:root[data-theme="dark"]{--bg:#09112a;--card:rgba(20,32,66,.72);--tx:#e6ecff;--mut:#9aa8d0;--bd:rgba(150,170,255,.18);--inp:rgba(255,255,255,.06);--gl:rgba(150,170,255,.06);--sh:0 12px 32px rgba(0,0,0,.4)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;font-family:'Be Vietnam Pro',system-ui,-apple-system,'Segoe UI',sans-serif;background-color:var(--bg);color:var(--tx);line-height:1.55;overflow-x:hidden;background-image:linear-gradient(var(--gl) 1px,transparent 1px),linear-gradient(90deg,var(--gl) 1px,transparent 1px);background-size:34px 34px;transition:background-color .4s,color .4s}
+.glow{position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(520px circle at var(--x) var(--y),rgba(15,168,154,.2),rgba(59,91,219,.1) 45%,transparent 70%)}
+.wrap{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:20px 16px 60px}
+header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.logo{font-weight:800;font-size:1.25rem;display:flex;gap:10px;align-items:center}
+.logo i{font-style:normal;display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--a),var(--b));box-shadow:0 6px 16px rgba(15,168,154,.4)}
+.nav{display:flex;gap:6px;overflow-x:auto;padding:6px;margin-bottom:20px;background:var(--card);border:1px solid var(--bd);border-radius:18px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);scrollbar-width:none}
+.nav button{flex:1 0 auto;border:0;background:none;color:var(--mut);font:inherit;font-weight:600;padding:10px 16px;border-radius:13px;cursor:pointer;white-space:nowrap;transition:.25s}
+.nav button:hover{color:var(--tx);background:var(--gl)}
+.nav button.on{color:#fff;background:linear-gradient(135deg,var(--a),var(--b));box-shadow:0 6px 16px rgba(59,91,219,.35)}
+.panel{display:none}.panel.on{display:block;animation:in .45s cubic-bezier(.2,.8,.2,1)}
+@keyframes in{from{opacity:0;transform:translateY(12px)}}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:20px;padding:20px;box-shadow:var(--sh);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);transition:transform .25s,border-color .25s}
+.card:hover{transform:translateY(-3px);border-color:var(--a)}
+.g{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));margin-top:16px}
+.g2{display:grid;gap:12px;grid-template-columns:2fr 1fr;margin-top:18px}
+@media(max-width:600px){.g2{grid-template-columns:1fr}}
+h1{font-size:clamp(1.7rem,5vw,2.7rem);line-height:1.15;margin:8px 0 10px;font-weight:800;background:linear-gradient(100deg,var(--tx) 30%,var(--a) 60%,var(--b));background-size:200%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:sh 7s ease-in-out infinite alternate}
+@keyframes sh{to{background-position:100% 0}}
+h2{margin:0 0 4px;font-size:1.3rem}h3{margin:0;font-size:1.02rem}
+.mut{color:var(--mut)}small{font-size:.82rem}
+.hero{padding:28px;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;border:2px dashed var(--a);opacity:.35;animation:spin 30s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#tip{min-height:3em;transition:opacity .4s;max-width:62ch}
+label{display:block;font-weight:600;font-size:.88rem;margin-bottom:10px}
+input,select,textarea{display:block;width:100%;margin-top:6px;padding:11px 13px;border-radius:12px;border:1px solid var(--bd);background:var(--inp);color:var(--tx);font:inherit;font-weight:400;transition:.2s}
+input:focus,select:focus,textarea:focus,button:focus-visible{outline:none;border-color:var(--a);box-shadow:0 0 0 3px rgba(15,168,154,.3)}
+textarea{resize:vertical;min-height:90px}
+input[type=checkbox]{width:18px;height:18px;margin:0;accent-color:var(--a);flex:none}
+.btn,.gh{border:0;cursor:pointer;font:inherit;font-weight:600;padding:10px 18px;border-radius:12px;transition:transform .2s,box-shadow .2s}
+.btn{color:#fff;background:linear-gradient(135deg,var(--a),var(--b))}
+.btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(59,91,219,.4)}
+.btn:active,.gh:active{transform:scale(.96)}
+.gh{background:var(--inp);color:var(--tx);border:1px solid var(--bd);padding:8px 12px}
+.gh:hover{border-color:var(--a)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.big{font-size:2.5rem;font-weight:800;line-height:1.1}
+.ringc{display:flex;align-items:center;gap:18px}
+.rg{animation:dr 1.3s cubic-bezier(.3,.7,.2,1)}@keyframes dr{from{stroke-dashoffset:339}}
+.bar{height:8px;border-radius:9px;background:var(--bd);overflow:hidden;margin:10px 0}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--a),var(--c));transition:width .6s}
+.st .sh{display:flex;gap:12px;align-items:center}.st .sh b{margin-left:auto;color:var(--a)}
+.num{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--a);color:#fff;font-weight:800;flex:none}
+.ck{display:flex;gap:10px;align-items:center;padding:7px 0;margin:0;font-weight:400;cursor:pointer}
+.ck:has(input:checked){color:var(--mut);text-decoration:line-through}
+.it{display:flex;gap:10px;align-items:flex-start;justify-content:space-between;padding:12px 14px;margin-top:10px;border:1px solid var(--bd);border-left:4px solid var(--a);border-radius:12px;background:var(--inp);animation:in .35s}
+.it p{margin:0;word-break:break-word;font-size:.93rem}
+.it.k1{border-left-color:var(--c)}.it.k2{border-left-color:var(--b)}
+.late{color:var(--r);font-weight:600}
+.res{padding:16px;border-radius:14px;background:var(--inp);border:1px solid var(--bd);margin-top:10px}
+.res b{font-size:1.9rem;color:var(--a)}
+.empty{padding:22px;text-align:center;color:var(--mut);border:1px dashed var(--bd);border-radius:14px;margin-top:10px}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,30px);background:var(--tx);color:var(--bg);padding:11px 20px;border-radius:30px;font-weight:600;opacity:0;pointer-events:none;transition:.3s;z-index:9}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+table{width:100%;border-collapse:collapse;font-size:.9rem}th,td{padding:8px 10px;border-bottom:1px solid var(--bd);text-align:right;white-space:nowrap}th:first-child,td:first-child{text-align:left}th{color:var(--mut);font-weight:600}.tw{overflow-x:auto}
+.gg{display:grid;grid-template-columns:minmax(90px,150px) 1fr;gap:10px;align-items:center;margin-top:12px;font-size:.88rem}
+.tk{position:relative;height:26px;border-radius:8px;background:var(--bd)}
+.bd{position:absolute;top:0;height:100%;border-radius:8px;background:rgba(15,168,154,.3);overflow:hidden;transform-origin:left;animation:gw .9s cubic-bezier(.2,.8,.2,1) backwards}
+.bd i{display:block;height:100%;background:linear-gradient(90deg,var(--a),var(--b))}
+.tl{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--r);z-index:2}
+@keyframes gw{from{transform:scaleX(0)}}
+.ok{color:var(--a);font-weight:600}
+details{border:1px solid var(--bd);border-radius:12px;padding:10px 14px;margin-top:8px;background:var(--inp)}summary{cursor:pointer;font-weight:600}details p{margin:8px 0 0;color:var(--mut)}
+@keyframes gy{from{transform:scaleY(0)}}
+.cg{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}.cw{text-align:center;font-weight:600;font-size:.78rem;color:var(--mut)}
+.cd{min-height:84px;padding:6px;border:1px solid var(--bd);border-radius:12px;background:var(--inp);cursor:pointer;text-align:left;font:inherit;color:inherit;display:flex;flex-direction:column;gap:3px;overflow:hidden;transition:.2s}
+.cd:hover{border-color:var(--a);transform:translateY(-2px)}.cd.o{opacity:.4}.cd.cn{box-shadow:inset 0 0 0 2px var(--a)}.cd.sl{background:rgba(15,168,154,.18)}.cd b{font-size:.82rem}
+.ch{font-size:.68rem;padding:1px 5px;border-radius:6px;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media(max-width:600px){.cd{min-height:56px;padding:4px;flex-direction:row;flex-wrap:wrap;align-content:flex-start}.cd b{width:100%}.ch{font-size:0;padding:0;width:8px;height:8px;border-radius:50%}}
+a{color:var(--b);font-weight:600}
+.nw{display:flex;gap:8px;align-items:stretch;margin-bottom:20px}.nw .gh{font-size:1.3rem;padding:0 14px;border-radius:14px}.nw .nav{flex:1;min-width:0;margin:0;padding-bottom:12px;scrollbar-width:thin;scrollbar-color:var(--a) transparent}
+.nav::-webkit-scrollbar{height:7px}.nav::-webkit-scrollbar-thumb{background:var(--a);border-radius:9px}.nav::-webkit-scrollbar-track{background:var(--bd);border-radius:9px}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="glow"></div>
+<div class="wrap">
+<header><div class="logo"><i>🔬</i>NCKH Studio</div><button class="gh" data-a="theme" aria-label="Đổi giao diện sáng tối">🌓 Giao diện</button></header>
+<div class="nw"><button class="gh" data-a="ns" data-k="-1" aria-label="Cuộn trái">‹</button><nav class="nav" id="nav"></nav><button class="gh" data-a="ns" data-k="1" aria-label="Cuộn phải">›</button></div>
+
+<section class="panel on" id="p-dash">
+  <div class="card hero">
+    <span class="mut">Trợ lý nghiên cứu khoa học cho sinh viên</span>
+    <h1>Đi từ ý tưởng đến công trình hoàn chỉnh</h1>
+    <p class="mut" id="tip"></p>
+    <div class="g2">
+      <label>Tên đề tài<input id="ti" placeholder="Ví dụ: Ảnh hưởng của mạng xã hội đến kết quả học tập"></label>
+      <label>Hạn nộp<input type="date" id="dl"></label>
+    </div>
+  </div>
+  <div class="g" id="stats"></div>
+  <div class="card" style="margin-top:16px"><h2>Sắp tới</h2><div id="up"></div></div>
+</section>
+
+<section class="panel" id="p-flow">
+  <h2>Quy trình 8 bước</h2><p class="mut" style="margin:0">Tick từng việc, tiến độ tổng được cập nhật ở trang Tổng quan.</p>
+  <div class="g" id="flow"></div>
+</section>
+
+<section class="panel" id="p-refs">
+  <div class="card">
+    <h2>Quản lý tài liệu và trích dẫn APA</h2>
+    <div class="g2" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">
+      <label>Tác giả<input id="ra" placeholder="Nguyễn, V. A., &amp; Trần, T. B."></label>
+      <label>Năm<input id="ry" placeholder="2024" inputmode="numeric"></label>
+      <label>Tiêu đề<input id="rn" placeholder="Tên bài báo hoặc sách"></label>
+      <label>Nguồn (tạp chí, NXB)<input id="rs" placeholder="Tạp chí Khoa học, 12(3), 45-60"></label>
+      <label>Liên kết hoặc DOI<input id="ru" placeholder="https://doi.org/..."></label>
+    </div>
+    <div class="row"><button class="btn" data-a="addRef">Thêm tài liệu</button><button class="gh" data-a="cpAll">Sao chép cả danh sách (A-Z)</button></div>
+  </div>
+  <div id="refs"></div>
+</section>
+
+<section class="panel" id="p-tasks">
+  <div class="card">
+    <h2>Kế hoạch công việc</h2>
+    <div class="g2"><label>Công việc<input id="tn" placeholder="Ví dụ: Phát phiếu khảo sát lớp A"></label><label>Hạn<input type="date" id="td"></label></div>
+    <button class="btn" data-a="addTask">Thêm công việc</button>
+  </div>
+  <div class="g" id="tasks"></div>
+</section>
+
+<section class="panel" id="p-tools">
+  <div class="g" style="margin-top:0">
+    <div class="card">
+      <h2>Tính cỡ mẫu</h2><p class="mut" style="margin-top:0"><small>Công thức Cochran và Slovin</small></p>
+      <label>Quy mô tổng thể N (để trống nếu chưa biết)<input id="cN" type="number" min="0" placeholder="Ví dụ: 5000"></label>
+      <label>Sai số cho phép (%)<input id="ce" type="number" value="5" min="1" max="30"></label>
+      <label>Độ tin cậy<select id="cz"><option value="1.645">90%</option><option value="1.96" selected>95%</option><option value="2.576">99%</option></select></label>
+      <label>Tỉ lệ ước tính p (%)<input id="cp" type="number" value="50" min="1" max="99"></label>
+      <div id="cr"></div>
+    </div>
+    <div class="card">
+      <h2>Khung đề cương mẫu</h2><p class="mut" style="margin-top:0"><small>Sao chép rồi dán vào Word hoặc Google Docs</small></p>
+      <textarea id="ol" rows="14" readonly></textarea>
+      <div class="row" style="margin-top:12px"><button class="btn" data-a="cpOl">Sao chép đề cương</button></div>
+    </div>
+  </div>
+</section>
+
+<section class="panel" id="p-stat">
+  <div class="card">
+    <h2>Phân tích dữ liệu</h2>
+    <p class="mut" style="margin-top:0"><small>Dán dữ liệu từ Excel: mỗi dòng là một người, mỗi cột là một biến hoặc một câu hỏi. Chỉ nhập số, dùng dấu chấm cho số thập phân.</small></p>
+    <textarea id="dt" rows="7" placeholder="4 5 4 3&#10;3 4 4 4&#10;5 5 4 5&#10;2 3 3 2&#10;4 4 5 4"></textarea>
+    <div class="row" style="margin-top:12px"><button class="btn" data-a="an" data-k="d">Thống kê mô tả</button><button class="btn" data-a="an" data-k="a">Cronbach’s Alpha</button><button class="btn" data-a="an" data-k="r">Tương quan Pearson</button><button class="btn" data-a="an" data-k="p">t-test ghép cặp</button><button class="btn" data-a="an" data-k="g">ANOVA</button><button class="btn" data-a="an" data-k="x">Chi-bình phương</button><button class="btn" data-a="an" data-k="v">Hồi quy đơn</button><button class="btn" data-a="an" data-k="c">Biểu đồ</button><button class="btn" data-a="an" data-k="t">So sánh 2 cột (t-test)</button></div>
+  </div>
+  <div class="card" style="margin-top:16px"><div id="ao"><div class="empty">Kết quả sẽ hiện ở đây sau khi bạn chọn một phép phân tích.</div></div><div class="row" style="margin-top:12px"><button class="gh" data-a="cpRes">Sao chép kết quả</button><button class="gh" data-a="saveRes">Lưu vào báo cáo</button></div></div>
+  <div class="card" style="margin-top:16px"><h2>Nên dùng phép kiểm định nào?</h2><label>Mục tiêu của bạn<select id="gm"></select></label><div id="gd"></div></div>
+</section>
+
+<section class="panel" id="p-cal">
+ <div class="card"><div class="row" style="justify-content:space-between"><button class="gh" data-a="cm" data-k="-1" aria-label="Tháng trước">←</button><h2 id="cmt" style="margin:0"></h2><div class="row"><button class="gh" data-a="ct">Hôm nay</button><button class="gh" data-a="cm" data-k="1" aria-label="Tháng sau">→</button></div></div>
+  <div class="cg" id="cgrid" style="margin-top:14px"></div>
+  <p class="mut"><small>Màu: xanh dương là họp nhóm, xanh lá là việc cần làm, đỏ là hạn nộp, cam là thực địa. Công việc có hạn ở tab Công việc cũng hiện ở đây. Bấm vào một ngày để xem và thêm việc.</small></p></div>
+ <div class="g"><div class="card" id="cday"></div>
+  <div class="card"><h3>Thêm vào ngày đang chọn</h3>
+   <label>Nội dung<input id="et" placeholder="Họp nhóm, phát phiếu khảo sát..."></label>
+   <div class="g2" style="grid-template-columns:1fr 1fr;margin-top:0"><label>Loại<select id="ek"></select></label><label>Giờ<input type="time" id="etm"></label></div>
+   <div class="g2" style="grid-template-columns:1fr 1fr;margin-top:0"><label>Người phụ trách<select id="ew"></select></label><label>Lặp hàng tuần (số tuần)<input type="number" id="er" min="1" max="52" value="1"></label></div>
+   <label>Liên kết (Meet, Drive, Zalo...)<input id="el" placeholder="https://..."></label>
+   <button class="btn" data-a="evadd">Thêm vào lịch</button></div></div>
+</section>
+
+<section class="panel" id="p-team">
+ <div class="g" style="margin-top:0">
+  <div class="card"><h2>Chia sẻ và đồng bộ nhóm</h2><p class="mut" id="ss" style="margin-top:0">Chưa bật. Dữ liệu chỉ nằm trên máy bạn.</p><div class="row"><button class="btn" data-a="sync">Bật đồng bộ nhóm</button><button class="gh" data-a="inv">Sao chép lời mời</button><button class="gh" data-a="wk">Sao chép tóm tắt tuần</button></div>
+   <p class="mut"><small>Cách dùng: chia sẻ trang này cho các bạn trong nhóm với quyền chỉnh sửa hoặc tương tác, ai mở cũng bấm Bật đồng bộ nhóm. Lịch, thành viên và liên kết sẽ dùng chung. Tiến độ quy trình, tài liệu và nhật ký vẫn riêng từng người. Nếu hai người sửa cùng lúc, bản lưu sau cùng được giữ.</small></p></div>
+  <div class="card"><h2>Thành viên</h2><label>Họ tên<input id="mn"></label><label>Vai trò<input id="mr" placeholder="Nhóm trưởng, thu thập dữ liệu..."></label><label>Liên hệ<input id="mc" placeholder="Zalo, email..."></label><button class="btn" data-a="mbadd">Thêm thành viên</button><div id="mbl"></div></div>
+  <div class="card"><h2>Kho liên kết</h2><label>Tên liên kết<input id="ln" placeholder="Thư mục Drive dữ liệu"></label><label>Đường dẫn<input id="lu" placeholder="https://..."></label><label>Nhóm<select id="lc"></select></label><button class="btn" data-a="lkadd">Thêm liên kết</button><div id="lkl"></div></div>
+  <div class="card"><h2>Biên bản họp</h2><label>Nội dung đã bàn<textarea id="mm"></textarea></label><label>Quyết định<textarea id="mq" style="min-height:60px"></textarea></label><label>Việc tiếp theo<textarea id="mv" style="min-height:60px"></textarea></label><button class="btn" data-a="minute">Lưu vào nhật ký</button></div>
+ </div>
+</section>
+
+<section class="panel" id="p-more"><div class="g" style="margin-top:0">
+ <div class="card"><h2>Tìm nguồn tài liệu</h2><label>Từ khóa<input id="sq" placeholder="mạng xã hội kết quả học tập"></label><div class="row" id="sl"></div></div>
+ <div class="card"><h2>Dự trù kinh phí</h2><label>Khoản mục<input id="bn" placeholder="In ấn phiếu khảo sát"></label><label>Đơn giá (đ)<input id="bp" type="number" min="0"></label><label>Số lượng<input id="bq" type="number" min="1" value="1"></label><button class="btn" data-a="bad">Thêm khoản</button><div id="bl"></div></div>
+ <div class="card"><h2>Tạo bảng câu hỏi Likert</h2><label>Mỗi dòng một phát biểu<textarea id="lq" placeholder="Tôi hài lòng với chất lượng giảng dạy"></textarea></label><div class="row"><button class="btn" data-a="lqg">Tạo bảng</button><button class="gh" data-a="lqc">Sao chép</button></div><textarea id="lqo" readonly style="margin-top:10px"></textarea></div>
+ <div class="card"><h2>Từ điển thuật ngữ</h2><label>Tìm thuật ngữ<input id="gq" placeholder="p-value, mẫu, giả thuyết..."></label><div id="gl"></div></div>
+</div></section>
+
+<section class="panel" id="p-ex">
+ <div class="g" style="margin-top:0">
+  <div class="card"><h2>Hẹn giờ tập trung</h2><p class="mut" style="margin-top:0"><small>25 phút làm việc, 5 phút nghỉ (Pomodoro)</small></p><div class="big" id="pt">25:00</div><div class="bar"><i id="pb" style="width:0"></i></div><p class="mut" id="pl" style="margin:0 0 12px"></p><div class="row"><button class="btn" id="pgo" data-a="ps">Bắt đầu</button><button class="gh" data-a="pr">Đặt lại</button></div></div>
+  <div class="card"><h2>Đánh giá đề tài</h2><p class="mut" style="margin-top:0"><small>Tick các tiêu chí đề tài của bạn đã đạt</small></p><div id="evl"></div><div id="evo"></div></div>
+  <div class="card"><h2>Diễn giải điểm Likert</h2><label>Điểm trung bình (thang 5 mức)<input id="lk" type="number" step="0.01" min="1" max="5" placeholder="3.85"></label><div id="lko"></div></div>
+  <div class="card"><h2>Chọn mẫu ngẫu nhiên</h2><label>Tổng thể N<input id="rsN" type="number" min="1" placeholder="300"></label><label>Cỡ mẫu n<input id="rsn" type="number" min="1" placeholder="50"></label><button class="btn" data-a="rsm">Chọn ngẫu nhiên</button><div id="ro"></div></div>
+  <div class="card"><h2>Đếm từ</h2><textarea id="wt" placeholder="Dán đoạn văn vào đây"></textarea><div id="wo"></div></div>
+ </div>
+ <div class="card" style="margin-top:16px"><h2>Câu hỏi hội đồng hay hỏi</h2><div id="fq"></div></div>
+</section>
+
+<section class="panel" id="p-gantt">
+  <div class="card"><h2>Lịch Gantt tự động</h2><p class="mut" style="margin-top:0"><small>8 bước được chia thời gian từ ngày bắt đầu đến hạn nộp. Phần màu đậm là tiến độ đã xong.</small></p>
+  <label style="max-width:220px">Ngày bắt đầu<input type="date" id="gs"></label><div id="gt"></div></div>
+</section>
+
+<section class="panel" id="p-notes">
+  <div class="card">
+    <h2>Nhật ký nghiên cứu</h2>
+    <label>Hôm nay bạn đã làm gì, phát hiện gì?<textarea id="nt" placeholder="Ghi ý tưởng, kết quả, vướng mắc cần hỏi giảng viên..."></textarea></label>
+    <button class="btn" data-a="addNote">Lưu ghi chú</button>
+  </div>
+  <div id="notes"></div>
+</section>
+
+<section class="panel" id="p-rep">
+  <div class="card"><h2>Báo cáo và sao lưu</h2><p class="mut" style="margin-top:0"><small>Tổng hợp tiến độ, công việc, kết quả phân tích, tài liệu và nhật ký.</small></p>
+  <textarea id="rp" rows="16" readonly></textarea>
+  <div class="row" style="margin-top:12px"><button class="btn" data-a="cpRep">Sao chép báo cáo</button><button class="gh" data-a="cpBk">Sao chép bản sao lưu</button><button class="gh" data-a="clrRes">Xóa kết quả đã lưu</button></div></div>
+  <div class="card" style="margin-top:16px"><h3>Khôi phục dữ liệu</h3><textarea id="bk" placeholder="Dán bản sao lưu vào đây"></textarea><button class="btn" style="margin-top:12px" data-a="rest">Khôi phục</button></div>
+</section>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let S={title:'',dl:'',done:{},refs:[],tasks:[],notes:[],saved:[],gs:''};
+try{S=Object.assign(S,JSON.parse(localStorage.getItem('nckh')||'{}'))}catch(e){}
+const save=()=>{try{localStorage.setItem('nckh',JSON.stringify(S))}catch(e){}push()};
+const TABS=[["dash","🏠","Tổng quan"],["flow","🧭","Quy trình"],["refs","📚","Tài liệu"],["tasks","✅","Công việc"],["tools","🧮","Công cụ"],["stat","📈","Phân tích"],["cal","🗓️","Lịch"],["team","👥","Nhóm"],["more","✨","Mở rộng"],["ex","🧰","Tiện ích"],["gantt","📅","Lịch Gantt"],["notes","📝","Nhật ký"],["rep","📄","Báo cáo"]];
+const ST=[
+["Chọn đề tài",["Xác định lĩnh vực bạn quan tâm","Đánh giá tính mới và tính khả thi","Chốt tên đề tài với giảng viên hướng dẫn"]],
+["Tổng quan tài liệu",["Tìm ít nhất 20 nguồn uy tín","Đọc và ghi chú từng nguồn","Xác định khoảng trống nghiên cứu"]],
+["Xây dựng đề cương",["Viết mục tiêu và câu hỏi nghiên cứu","Nêu giả thuyết hoặc khung lý thuyết","Lập kế hoạch và phương pháp"]],
+["Thiết kế nghiên cứu",["Xác định mẫu và công cụ","Thiết kế phiếu khảo sát hoặc thí nghiệm","Chạy thử với nhóm nhỏ"]],
+["Thu thập dữ liệu",["Tiến hành thu thập","Làm sạch dữ liệu","Sao lưu dữ liệu gốc"]],
+["Phân tích kết quả",["Thống kê mô tả","Kiểm định giả thuyết","Diễn giải kết quả"]],
+["Viết báo cáo",["Chương mở đầu và cơ sở lý thuyết","Chương phương pháp và kết quả","Bàn luận, kết luận, kiến nghị","Hoàn thiện tài liệu tham khảo"]],
+["Bảo vệ và công bố",["Làm slide báo cáo","Tập trình bày và trả lời câu hỏi","Chỉnh sửa theo góp ý và nộp"]]];
+const TIPS=["Một câu hỏi nghiên cứu tốt đủ hẹp để trả lời được trong thời gian bạn có.","Ghi nguồn ngay khi đọc. Bổ sung trích dẫn về sau luôn tốn công gấp ba.","Làm thử với 5 đến 10 người trước khi phát phiếu khảo sát đại trà.","Sao lưu dữ liệu gốc ở hai nơi và không bao giờ sửa trực tiếp trên bản gốc.","Gặp giảng viên hướng dẫn định kỳ, mang theo câu hỏi cụ thể và bản nháp mới nhất.","Viết nháp sớm. Bản nháp xấu vẫn tốt hơn trang giấy trống."];
+const STN=["Cần làm","Đang làm","Hoàn thành"];
+const fmt=r=>`${r.a} (${r.y}). ${r.t}. ${r.s?r.s+'. ':''}${r.u}`.trim();
+let tt;const toast=m=>{const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),1800)};
+function cp(t){const ok=()=>toast('Đã sao chép');const fb=()=>{const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy');ok()}catch(e){toast('Không sao chép được')}a.remove()};
+ try{navigator.clipboard.writeText(t).then(ok,fb)}catch(e){fb()}}
+$('#nav').innerHTML=TABS.map((t,i)=>`<button data-a="tab" data-k="${t[0]}" class="${i?'':'on'}">${t[1]} ${t[2]}</button>`).join('');
+
+function prog(){const tot=ST.reduce((a,s)=>a+s[1].length,0),d=ST.reduce((a,s,i)=>a+s[1].filter((_,j)=>S.done[i+'-'+j]).length,0);return[d,tot,Math.round(d/tot*100)]}
+function rStats(){
+ const[d,tot,p]=prog(),C=339.3,td=S.tasks.filter(t=>t.s==2).length;
+ let left='<div class="big">–</div><small class="mut">Hãy đặt hạn nộp ở phía trên</small>';
+ if(S.dl){const n=Math.ceil((new Date(S.dl+'T23:59:59')-Date.now())/864e5);left=n>=0?`<div class="big">${n}</div><small class="mut">ngày nữa đến hạn nộp</small>`:`<div class="big late">${-n}</div><small class="mut">ngày đã quá hạn</small>`}
+ $('#stats').innerHTML=`<div class="card ringc" style="grid-column:1/-1"><svg viewBox="0 0 130 130" width="130" height="130" aria-hidden="true"><defs><linearGradient id="gr"><stop offset="0" stop-color="#0fa89a"/><stop offset="1" stop-color="#3b5bdb"/></linearGradient></defs><circle cx="65" cy="65" r="54" fill="none" stroke="var(--bd)" stroke-width="12"/><circle class="rg" cx="65" cy="65" r="54" fill="none" stroke="url(#gr)" stroke-width="12" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-p/100)}" transform="rotate(-90 65 65)"/><text x="65" y="73" text-anchor="middle" font-size="26" font-weight="800" fill="currentColor">${p}%</text></svg><div><h2>Tiến độ nghiên cứu</h2><p class="mut" style="margin:0">${d}/${tot} đầu việc trong quy trình đã xong.<br>${esc(S.title)||'Hãy đặt tên đề tài để bắt đầu.'}</p></div></div>
+ <div class="card">${left}</div>
+ <div class="card"><div class="big">${S.refs.length}</div><small class="mut">tài liệu tham khảo</small></div>
+ <div class="card"><div class="big">${td}/${S.tasks.length}</div><small class="mut">công việc hoàn thành</small></div>
+ <div class="card"><div class="big">${S.notes.length}</div><small class="mut">ghi chú nhật ký</small></div>`}
+function rFlow(){$('#flow').innerHTML=ST.map((s,i)=>{const d=s[1].filter((_,j)=>S.done[i+'-'+j]).length,p=Math.round(d/s[1].length*100);
+ return`<div class="card st"><div class="sh"><span class="num">${i+1}</span><div><h3>${s[0]}</h3><small class="mut">${d}/${s[1].length} việc</small></div><b>${p}%</b></div><div class="bar"><i style="width:${p}%"></i></div>${s[1].map((t,j)=>`<label class="ck"><input type="checkbox" data-a="tog" data-k="${i}-${j}" ${S.done[i+'-'+j]?'checked':''}>${t}</label>`).join('')}</div>`}).join('')}
+function rRefs(){const l=S.refs;$('#refs').innerHTML=l.length?l.map((r,i)=>`<div class="it"><p>${esc(fmt(r))}</p><div class="row" style="flex:none"><button class="gh" data-a="cpRef" data-i="${i}" aria-label="Sao chép">📋</button><button class="gh" data-a="delRef" data-i="${i}" aria-label="Xóa">🗑️</button></div></div>`).join(''):'<div class="empty">Chưa có tài liệu nào. Nhập thông tin ở trên để tạo trích dẫn APA.</div>'}
+function rTasks(){const today=new Date().toISOString().slice(0,10);$('#tasks').innerHTML=STN.map((n,k)=>{const l=S.tasks.map((t,i)=>[t,i]).filter(x=>x[0].s==k);
+ return`<div class="card"><h3>${n} (${l.length})</h3>${l.length?l.map(([t,i])=>`<div class="it k${k}"><div><p>${esc(t.n)}</p>${t.d?`<small class="${t.d<today&&k<2?'late':'mut'}">Hạn ${t.d.split('-').reverse().join('/')}</small>`:''}</div><div class="row" style="flex:none;gap:4px">${k?`<button class="gh" data-a="mv" data-i="${i}" data-k="-1" aria-label="Lùi">←</button>`:''}${k<2?`<button class="gh" data-a="mv" data-i="${i}" data-k="1" aria-label="Tiến">→</button>`:`<button class="gh" data-a="delTask" data-i="${i}" aria-label="Xóa">🗑️</button>`}</div></div>`).join(''):'<div class="empty">Trống</div>'}</div>`}).join('')}
+function rNotes(){$('#notes').innerHTML=S.notes.length?S.notes.map((n,i)=>[n,i]).reverse().map(([n,i])=>`<div class="it"><div><small class="mut">${esc(n.at)}</small><p>${esc(n.t).replace(/\n/g,'<br>')}</p></div><button class="gh" data-a="delNote" data-i="${i}" aria-label="Xóa">🗑️</button></div>`).join(''):'<div class="empty">Chưa có ghi chú. Hãy ghi lại điều bạn vừa học được hôm nay.</div>'}
+function calc(){const N=+$('#cN').value,e=+$('#ce').value/100,z=+$('#cz').value,p=+$('#cp').value/100;
+ if(!(e>0&&p>0&&p<1)){$('#cr').innerHTML='<div class="empty">Nhập sai số và tỉ lệ hợp lệ</div>';return}
+ const n0=z*z*p*(1-p)/(e*e),co=N>0?n0/(1+(n0-1)/N):n0;
+ $('#cr').innerHTML=`<div class="res"><small class="mut">Cochran${N>0?' (hiệu chỉnh theo N)':''}</small><br><b>${Math.ceil(co)}</b> <span class="mut">người</span></div>`+(N>0?`<div class="res"><small class="mut">Slovin</small><br><b>${Math.ceil(N/(1+N*e*e))}</b> <span class="mut">người</span></div>`:'')}
+function ol(){return["ĐỀ CƯƠNG NGHIÊN CỨU KHOA HỌC","","1. Tên đề tài: "+(S.title||"..."),"2. Tính cấp thiết của đề tài","3. Mục tiêu nghiên cứu (chung và cụ thể)","4. Câu hỏi nghiên cứu và giả thuyết","5. Đối tượng và phạm vi nghiên cứu","6. Phương pháp nghiên cứu (mẫu, công cụ, xử lý số liệu)","7. Nội dung và kế hoạch thực hiện theo tháng","8. Dự kiến kết quả và sản phẩm","9. Kinh phí (nếu có)","10. Tài liệu tham khảo"].join("\n")}
+const mean=a=>a.reduce((x,y)=>x+y,0)/a.length,vr=a=>{const m=mean(a);return a.reduce((s,v)=>s+(v-m)**2,0)/(a.length-1)},sd=a=>Math.sqrt(vr(a)),md=a=>{const s=[...a].sort((x,y)=>x-y),h=s.length>>1;return s.length%2?s[h]:(s[h-1]+s[h])/2};
+const f=(v,d=3)=>isFinite(v)?v.toFixed(d).replace('.',','):'–',pf=p=>p<.001?'< 0,001':f(p);
+function lg(x){const c=[76.18009172947146,-86.50532032941677,24.01409824083091,-1.231739572450155,.1208650973866179e-2,-.5395239384953e-5];let y=x,t=x+5.5,s=1.000000000190015;t-=(x+.5)*Math.log(t);for(const v of c)s+=v/++y;return -t+Math.log(2.5066282746310005*s/x)}
+const gz=v=>Math.abs(v)<1e-30?1e-30:v;
+function cf(x,a,b){let c=1,d=1/gz(1-(a+b)*x/(a+1)),h=d;for(let m=1;m<=200;m++){const m2=2*m;let u=m*(b-m)*x/((a+m2-1)*(a+m2));d=1/gz(1+u*d);c=gz(1+u/c);h*=d*c;u=-(a+m)*(a+b+m)*x/((a+m2)*(a+m2+1));d=1/gz(1+u*d);c=gz(1+u/c);const dl=d*c;h*=dl;if(Math.abs(dl-1)<3e-7)break}return h}
+function ib(x,a,b){if(x<=0)return 0;if(x>=1)return 1;const bt=Math.exp(lg(a+b)-lg(a)-lg(b)+a*Math.log(x)+b*Math.log(1-x));return x<(a+1)/(a+b+2)?bt*cf(x,a,b)/a:1-bt*cf(1-x,b,a)/b}
+const pT=(t,df)=>ib(df/(df+t*t),df/2,.5);
+const pr=(x,y)=>{const mx=mean(x),my=mean(y);let s=0;x.forEach((v,i)=>s+=(v-mx)*(y[i]-my));return s/((x.length-1)*sd(x)*sd(y))};
+const al=c=>{const k=c.length,n=c[0].length,tot=Array.from({length:n},(_,i)=>c.reduce((s,x)=>s+x[i],0));return k/(k-1)*(1-c.reduce((s,x)=>s+vr(x),0)/vr(tot))};
+function cols(){const rows=$('#dt').value.split('\n').map(l=>l.trim()).filter(Boolean).map(l=>l.split(/[\s,;]+/).map(Number)).filter(r=>r.every(isFinite)),k=rows[0]?rows[0].length:0,R=rows.filter(r=>r.length==k);return k?Array.from({length:k},(_,j)=>R.map(r=>r[j])):[]}
+function an(t){const c=cols(),o=$('#ao'),n=c[0]?c[0].length:0,E=m=>o.innerHTML='<div class="empty">'+m+'</div>';
+ if(n<3)return E('Cần ít nhất 3 dòng dữ liệu số hợp lệ.');if(t!='d'&&c.length<2)return E('Phép phân tích này cần từ 2 cột trở lên.');
+ const T=(h,rs)=>`<div class="tw"><table><tr>${h.map(x=>`<th>${x}</th>`).join('')}</tr>${rs.map(r=>`<tr>${r.map(x=>`<td>${x}</td>`).join('')}</tr>`).join('')}</table></div>`,nm=i=>'Biến '+(i+1);let h='';
+ if(t=='d')h=`<h3>Thống kê mô tả (n = ${n})</h3>`+T(['Biến','TB','ĐLC','Min','Trung vị','Max'],c.map((x,i)=>[nm(i),f(mean(x)),f(sd(x)),f(Math.min(...x),2),f(md(x),2),f(Math.max(...x),2)]));
+ else if(t=='a'){const a=al(c);h=`<h3>Cronbach’s Alpha (${c.length} biến, n = ${n})</h3><div class="res"><b>${f(a)}</b> <span class="${a>=.7?'ok':'late'}">${a>=.9?'Rất tốt':a>=.8?'Tốt':a>=.7?'Chấp nhận được':a>=.6?'Tạm chấp nhận':'Chưa đạt, cần xem lại thang đo'}</span></div>`+(c.length>2?T(['Biến','Alpha nếu loại biến','Tương quan biến-tổng'],c.map((x,i)=>{const ot=Array.from({length:n},(_,r)=>c.reduce((s,y,j)=>j==i?s:s+y[r],0)),q=pr(x,ot);return[nm(i),f(al(c.filter((_,j)=>j!=i))),`<span class="${q<.3?'late':''}">${f(q)}</span>`]}))+'<p class="mut"><small>Biến có tương quan biến-tổng dưới 0,3 (màu đỏ) nên cân nhắc loại bỏ.</small></p>':'')}
+ else if(t=='r')h=`<h3>Ma trận tương quan Pearson (n = ${n})</h3>`+T([''].concat(c.map((_,i)=>nm(i))),c.map((x,i)=>[nm(i)].concat(c.map((y,j)=>{if(i==j)return'1';const r=pr(x,y),p=Math.abs(r)>=1?0:pT(r*Math.sqrt((n-2)/(1-r*r)),n-2);return f(r)+(p<.01?'**':p<.05?'*':'')}))))+'<p class="mut"><small>* p &lt; 0,05; ** p &lt; 0,01. |r| từ 0,1 là yếu, từ 0,3 là vừa, từ 0,5 là mạnh.</small></p>';
+ else{const x=c[0],y=c[1],m1=mean(x),m2=mean(y),v1=vr(x)/n,v2=vr(y)/n,tv=(m1-m2)/Math.sqrt(v1+v2),df=(v1+v2)**2/(v1*v1/(n-1)+v2*v2/(n-1)),p=pT(tv,df),d=(m1-m2)/Math.sqrt((vr(x)+vr(y))/2);
+ h='<h3>t-test hai mẫu độc lập (Welch), so sánh cột 1 và cột 2</h3>'+T(['TB cột 1','TB cột 2','t','df','p','Cohen’s d'],[[f(m1),f(m2),f(tv),f(df,1),pf(p),f(d,2)]])+`<p class="${p<.05?'ok':'mut'}">${p<.05?'Khác biệt có ý nghĩa thống kê (p < 0,05).':'Chưa đủ bằng chứng về sự khác biệt (p ≥ 0,05).'}</p>`}
+ o.innerHTML=h}
+const GD=[["Mô tả đặc điểm của mẫu","Thống kê mô tả: tần số, phần trăm, trung bình, độ lệch chuẩn","Dùng biểu đồ cột hoặc tròn cho biến phân loại, histogram cho biến số."],["Kiểm tra độ tin cậy của thang đo","Cronbach’s Alpha và tương quan biến-tổng","Alpha từ 0,7 trở lên; tương quan biến-tổng từ 0,3 trở lên."],["So sánh trung bình của 2 nhóm","t-test mẫu độc lập (hoặc Mann-Whitney nếu dữ liệu lệch)","Biến phụ thuộc là số, hai nhóm không liên quan nhau."],["So sánh trung bình của 3 nhóm trở lên","ANOVA một yếu tố (hoặc Kruskal-Wallis)","Kiểm tra phương sai đồng nhất, dùng Tukey để so sánh từng cặp."],["So sánh trước và sau can thiệp","t-test mẫu ghép cặp (hoặc Wilcoxon)","Cùng một nhóm được đo hai lần."],["Mối quan hệ giữa hai biến số","Tương quan Pearson (hoặc Spearman nếu dữ liệu lệch)","Đọc hệ số r và mức ý nghĩa p."],["Mối quan hệ giữa hai biến phân loại","Kiểm định Chi-bình phương","Tần số kỳ vọng ở mỗi ô nên từ 5 trở lên."],["Đo ảnh hưởng của nhiều yếu tố","Hồi quy tuyến tính bội","Kiểm tra đa cộng tuyến (VIF) và phần dư."]];
+const W=[1,2,1,1.5,2,1.5,2,1];
+function rGantt(){const g=$('#gt'),s0=S.gs||new Date().toISOString().slice(0,10);$('#gs').value=s0;
+ if(!S.dl||S.dl<=s0)return g.innerHTML='<div class="empty">Hãy đặt hạn nộp ở trang Tổng quan (sau ngày bắt đầu) để tạo lịch.</div>';
+ const a=new Date(s0).getTime(),L=new Date(S.dl).getTime()-a,tw=W.reduce((x,y)=>x+y),now=(Date.now()-a)/L*100,fd=t=>new Date(t).toLocaleDateString('vi-VN',{day:'2-digit',month:'2-digit',timeZone:'UTC'});let acc=0;
+ g.innerHTML=ST.map((s,i)=>{const l=acc/tw*100,w=W[i]/tw*100,st=a+L*acc/tw,en=a+L*(acc+W[i])/tw,p=Math.round(s[1].filter((_,j)=>S.done[i+'-'+j]).length/s[1].length*100);acc+=W[i];
+  return`<div class="gg"><div><b>${i+1}. ${s[0]}</b><br><small class="mut">${fd(st)} – ${fd(en)}</small></div><div class="tk"><div class="bd" style="left:${l}%;width:${w}%"><i style="width:${p}%"></i></div>${now>=0&&now<=100?`<span class="tl" style="left:${now}%"></span>`:''}</div></div>`}).join('')+'<p class="mut"><small>Vạch đỏ là hôm nay.</small></p>'}
+function rep(){const[d,tot,p]=prog(),dt=x=>x.split('-').reverse().join('/');return['BÁO CÁO TIẾN ĐỘ NCKH','Đề tài: '+(S.title||'(chưa đặt tên)'),'Hạn nộp: '+(S.dl?dt(S.dl):'(chưa đặt)'),`Tiến độ: ${p}% (${d}/${tot} đầu việc)`,'','I. TIẾN ĐỘ THEO BƯỚC'].concat(ST.map((s,i)=>`${i+1}. ${s[0]}: ${s[1].filter((_,j)=>S.done[i+'-'+j]).length}/${s[1].length}`),['','II. CÔNG VIỆC'],STN.map((n,k)=>n+': '+(S.tasks.filter(t=>t.s==k).map(t=>t.n).join('; ')||'không có')),['','III. KẾT QUẢ PHÂN TÍCH'],S.saved.length?S.saved:['(chưa lưu kết quả)'],['','IV. TÀI LIỆU THAM KHẢO'],S.refs.length?S.refs.map(fmt).sort((x,y)=>x.localeCompare(y,'vi')):['(chưa có)'],['','V. NHẬT KÝ'],S.notes.length?S.notes.map(n=>`[${n.at}] ${n.t}`):['(chưa có)']).join('\n')}
+const rRep=()=>{$('#rp').value=rep()};
+const rg=()=>{const g=GD[$('#gm').value];$('#gd').innerHTML=`<div class="res"><b style="font-size:1.1rem;color:var(--a)">${g[1]}</b><p class="mut" style="margin:8px 0 0">${g[2]}</p></div>`};
+$('#gm').innerHTML=GD.map((g,i)=>`<option value="${i}">${g[0]}</option>`).join('');$('#gm').addEventListener('input',rg);rg();
+$('#gs').addEventListener('input',e=>{S.gs=e.target.value;save();rGantt()});
+function gq(a,x){if(x<=0)return 0;const e=Math.exp(-x+a*Math.log(x)-lg(a));if(x<a+1){let s=1/a,t=s;for(let n=1;n<300;n++){t*=x/(a+n);s+=t;if(t<1e-11*s)break}return s*e}let b=x+1-a,c=1e30,d=1/gz(b),h=d;for(let i=1;i<300;i++){const u=-i*(i-a);b+=2;d=1/gz(u*d+b);c=gz(b+u/c);const dl=d*c;h*=dl;if(Math.abs(dl-1)<1e-11)break}return 1-e*h}
+const TB=(h,rs)=>`<div class="tw"><table><tr>${h.map(x=>`<th>${x}</th>`).join('')}</tr>${rs.map(r=>`<tr>${r.map(x=>`<td>${x}</td>`).join('')}</tr>`).join('')}</table></div>`,vd=p=>`<p class="${p<.05?'ok':'mut'}">${p<.05?'Khác biệt hoặc mối liên hệ có ý nghĩa thống kê (p < 0,05).':'Chưa đủ bằng chứng về sự khác biệt hoặc mối liên hệ (p ≥ 0,05).'}</p>`;
+function an2(t){if(!'pvgxc'.includes(t))return an(t);
+ const c=cols(),o=$('#ao'),n=c[0]?c[0].length:0,k=c.length,E=m=>o.innerHTML='<div class="empty">'+m+'</div>';let h='';
+ if(n<(t=='x'?2:3)||k<(t=='c'?1:2))return E('Cần ít nhất 3 dòng (2 dòng với Chi-bình phương) và 2 cột số hợp lệ.');
+ if(t=='p'){const d=c[0].map((v,i)=>v-c[1][i]),m=mean(d),tv=m/(sd(d)/Math.sqrt(n)),p=pT(tv,n-1);h='<h3>t-test mẫu ghép cặp (cột 1 so với cột 2)</h3>'+TB(['TB chênh lệch','t','df','p','Cohen’s d'],[[f(m),f(tv),n-1,pf(p),f(m/sd(d),2)]])+vd(p)}
+ else if(t=='g'){const ms=c.map(mean),M=mean(ms),N=n*k,sb=n*ms.reduce((s,m)=>s+(m-M)**2,0),sw=c.reduce((s,x,j)=>s+x.reduce((u,v)=>u+(v-ms[j])**2,0),0),d1=k-1,d2=N-k,F=sb/d1/(sw/d2),p=ib(d2/(d2+d1*F),d2/2,d1/2);
+  h='<h3>ANOVA một yếu tố (mỗi cột là một nhóm)</h3>'+TB(['Nguồn','SS','df','MS','F','p'],[['Giữa nhóm',f(sb),d1,f(sb/d1),f(F),pf(p)],['Trong nhóm',f(sw),d2,f(sw/d2),'','']])+vd(p)+`<p class="mut"><small>η² = ${f(sb/(sb+sw))}. Nếu p < 0,05, hãy chạy kiểm định hậu nghiệm (Tukey) để biết nhóm nào khác nhau.</small></p>`}
+ else if(t=='v'){const x=c[0],y=c[1],r=pr(x,y),b=r*sd(y)/sd(x),a=mean(y)-b*mean(x),p=Math.abs(r)>=1?0:pT(r*Math.sqrt((n-2)/(1-r*r)),n-2);
+  h='<h3>Hồi quy tuyến tính đơn (X = cột 1, Y = cột 2)</h3><div class="res"><b style="font-size:1.3rem">Y = '+f(a)+(b<0?' − ':' + ')+f(Math.abs(b))+'·X</b></div>'+TB(['R²','r','p (độ dốc)','n'],[[f(r*r),f(r),pf(p),n]])+vd(p)}
+ else if(t=='x'){const rw=Array.from({length:n},(_,i)=>c.reduce((s,x)=>s+x[i],0)),cs=c.map(x=>x.reduce((s,v)=>s+v,0)),N=cs.reduce((s,v)=>s+v,0);let chi=0,low=0;
+  c.forEach((x,j)=>x.forEach((ob,i)=>{const e=rw[i]*cs[j]/N;if(e<5)low++;chi+=(ob-e)**2/e}));const df=(n-1)*(k-1),p=1-gq(df/2,chi/2);
+  h='<h3>Chi-bình phương độc lập (nhập bảng tần số: dòng là mức của biến 1, cột là mức của biến 2)</h3>'+TB(['χ²','df','p','Cramér’s V','N'],[[f(chi),df,pf(p),f(Math.sqrt(chi/(N*Math.min(n-1,k-1)))),N]])+vd(p)+(low?`<p class="late"><small>Có ${low} ô có tần số kỳ vọng dưới 5, cần thận trọng khi diễn giải.</small></p>`:'')}
+ else{const ms=c.map(mean),mx=Math.max(...ms.map(Math.abs),1e-9),w=360/k;
+  h='<h3>Biểu đồ trung bình theo biến</h3><svg viewBox="0 0 400 220" style="width:100%;max-width:520px"><defs><linearGradient id="gc" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0fa89a"/><stop offset="1" stop-color="#3b5bdb"/></linearGradient></defs>'+ms.map((m,i)=>{const hh=Math.abs(m)/mx*150,x=30+i*w;return`<rect x="${x+w*.15}" y="${180-hh}" width="${w*.7}" height="${hh}" rx="6" fill="url(#gc)" style="transform-box:fill-box;transform-origin:bottom;animation:gy .9s cubic-bezier(.2,.8,.2,1) backwards;animation-delay:${i*.08}s"/><text x="${x+w/2}" y="${172-hh}" text-anchor="middle" font-size="11" fill="currentColor">${f(m,2)}</text><text x="${x+w/2}" y="198" text-anchor="middle" font-size="11" fill="currentColor" opacity=".7">Biến ${i+1}</text>`}).join('')+'<line x1="25" y1="180" x2="395" y2="180" stroke="var(--bd)"/></svg>'}
+ o.innerHTML=h}
+let pm={m:0,t:1500,on:0,id:0};const PM=[1500,300];
+const pd=()=>{const t=pm.t;$('#pt').textContent=String(t/60|0).padStart(2,'0')+':'+String(t%60).padStart(2,'0');$('#pb').style.width=(100-t/PM[pm.m]*100)+'%';$('#pgo').textContent=pm.on?'Tạm dừng':'Bắt đầu';$('#pl').textContent=(pm.m?'Giờ nghỉ':'Đang tập trung')+' · đã hoàn thành '+(S.pomo||0)+' phiên'};
+const ptk=()=>{if(--pm.t<=0){clearInterval(pm.id);pm.on=0;if(!pm.m){S.pomo=(S.pomo||0)+1;save()}pm.m^=1;pm.t=PM[pm.m];toast(pm.m?'Hết phiên, nghỉ 5 phút nhé':'Hết giờ nghỉ, quay lại làm việc')}pd()};
+const ptg=()=>{if(pm.on)clearInterval(pm.id);else pm.id=setInterval(ptk,1000);pm.on^=1;pd()},prs=()=>{clearInterval(pm.id);pm={m:0,t:1500,on:0,id:0};pd()};
+const EV=['Đề tài có tính mới hoặc góc nhìn riêng','Làm xong được trong thời gian hiện có','Tiếp cận được đối tượng hoặc dữ liệu cần thiết','Có giảng viên đồng ý hướng dẫn','Có ý nghĩa thực tiễn hoặc khoa học rõ ràng','Đảm bảo đạo đức nghiên cứu (xin đồng ý, ẩn danh)'];
+$('#evl').innerHTML=EV.map(t=>`<label class="ck"><input type="checkbox" class="ev">${t}</label>`).join('');
+const LK=['Rất không đồng ý / Rất thấp','Không đồng ý / Thấp','Phân vân / Trung bình','Đồng ý / Cao','Rất đồng ý / Rất cao'];
+const exF=()=>{const c=$$('.ev:checked').length,v=+$('#lk').value,t=$('#wt').value.trim(),w=t?t.split(/\s+/).length:0;
+ $('#evo').innerHTML=`<div class="res"><b>${c}/6</b> <span class="${c>=5?'ok':c>=3?'mut':'late'}">${c>=5?'Rất khả thi':c>=3?'Cần củng cố các điểm còn thiếu':'Nên thu hẹp hoặc đổi hướng đề tài'}</span></div>`;
+ $('#lko').innerHTML=v>=1&&v<=5?`<div class="res"><b style="font-size:1.2rem">${LK[[1.8,2.6,3.4,4.2].filter(x=>v>x).length]}</b></div>`:'<div class="empty">Nhập điểm từ 1 đến 5</div>';
+ $('#wo').innerHTML=`<div class="res"><b>${w}</b> từ · ${t.length} ký tự · đọc khoảng ${w?Math.max(1,Math.round(w/200)):0} phút</div>`};
+function rsm(){const N=+$('#rsN').value,n=+$('#rsn').value;if(!(N>=1&&N<=1e5&&n>=1&&n<=N))return $('#ro').innerHTML='<div class="empty">Cần 1 ≤ n ≤ N (N tối đa 100.000)</div>';
+ const a=Array.from({length:N},(_,i)=>i+1);for(let i=N-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}
+ $('#ro').innerHTML=`<div class="res"><small class="mut">Số thứ tự được chọn (${n}/${N})</small><p style="margin:6px 0 0">${a.slice(0,n).sort((x,y)=>x-y).join(', ')}</p></div>`}
+const FQ=[['Vì sao bạn chọn đề tài này?','Nêu vấn đề thực tế, khoảng trống từ phần tổng quan tài liệu và đóng góp dự kiến.'],['Điểm mới của đề tài là gì?','So sánh ngắn với 2 đến 3 nghiên cứu gần nhất, chỉ ra khác biệt về đối tượng, phương pháp hoặc bối cảnh.'],['Vì sao chọn cỡ mẫu và phương pháp này?','Dẫn công thức cỡ mẫu, cách chọn mẫu và lý do phương pháp phù hợp với câu hỏi nghiên cứu.'],['Thang đo của bạn có đáng tin cậy không?','Nêu nguồn thang đo, Cronbach’s Alpha và tương quan biến-tổng.'],['Hạn chế của nghiên cứu là gì?','Thừa nhận thẳng thắn (mẫu nhỏ, phạm vi hẹp, tự báo cáo) và đề xuất hướng khắc phục.'],['Kết quả có thể ứng dụng ở đâu?','Chỉ rõ đối tượng hưởng lợi và bước nghiên cứu tiếp theo.'],['Bạn đóng góp gì trong nhóm?','Chuẩn bị sẵn phần việc của chính bạn, nói cụ thể và trung thực.'],['Nếu làm lại, bạn sẽ thay đổi gì?','Chọn 1 đến 2 bài học thật về mẫu, thời gian hoặc công cụ.']];
+$('#fq').innerHTML=FQ.map(q=>`<details><summary>${q[0]}</summary><p>${q[1]}</p></details>`).join('');
+$('#p-ex').addEventListener('input',exF);
+const A=k=>S[k]||(S[k]=[]),uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6),iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const KT=[['Họp nhóm','#3b5bdb'],['Việc cần làm','#0fa89a'],['Hạn nộp','#ff5d73'],['Thực địa','#f59f00'],['Khác','#868e96']],LC=['Tài liệu','Dữ liệu','Họp online','Nhóm chat','Khác'],LI=['📄','📊','🎥','💬','🔗'];
+let cm=new Date(),cs=iso(new Date());cm.setDate(1);
+const evs=()=>{const l=A('ev').slice();S.tasks.forEach(t=>t.d&&l.push({id:'t',d:t.d,t:t.n,k:1,ro:1,x:t.s==2}));if(S.dl)l.push({id:'dl',d:S.dl,t:'Hạn nộp: '+(S.title||'đề tài'),k:2,ro:1});return l};
+const gcl=e=>{const b=iso(new Date(new Date(e.d+'T00:00:00').getTime()+864e5));return 'https://calendar.google.com/calendar/render?action=TEMPLATE&text='+encodeURIComponent(e.t)+'&dates='+e.d.replace(/-/g,'')+'/'+b.replace(/-/g,'')+'&details='+encodeURIComponent((e.w?'Phụ trách: '+e.w+' ':'')+(e.l||''))};
+function rCal(){const y=cm.getFullYear(),m=cm.getMonth(),f0=(new Date(y,m,1).getDay()+6)%7,E=evs(),td=iso(new Date());
+ let h=['T2','T3','T4','T5','T6','T7','CN'].map(x=>`<div class="cw">${x}</div>`).join('');
+ for(let i=0;i<42;i++){const d=new Date(y,m,1-f0+i),s=iso(d),l=E.filter(e=>e.d==s);
+  h+=`<button class="cd${d.getMonth()!=m?' o':''}${s==td?' cn':''}${s==cs?' sl':''}" data-a="day" data-k="${s}"><b>${d.getDate()}</b>${l.slice(0,3).map(e=>`<span class="ch" style="background:${KT[e.k][1]}">${esc(e.t)}</span>`).join('')}${l.length>3?`<small class="mut">+${l.length-3}</small>`:''}</button>`}
+ $('#cgrid').innerHTML=h;$('#cmt').textContent='Tháng '+(m+1)+' / '+y;
+ const L=E.filter(e=>e.d==cs).sort((p,q)=>(p.tm||'').localeCompare(q.tm||''));
+ $('#cday').innerHTML=`<h3>Ngày ${cs.split('-').reverse().join('/')}</h3>`+(L.length?L.map(e=>`<div class="it" style="border-left-color:${KT[e.k][1]}"><div><p style="${e.x?'text-decoration:line-through;opacity:.6':''}"><b>${esc(e.t)}</b>${e.tm?' · '+e.tm:''}</p><small class="mut">${KT[e.k][0]}${e.w?' · '+esc(e.w):''}</small>${e.l?`<br><a href="${esc(e.l)}" target="_blank" rel="noopener">🔗 Mở liên kết</a>`:''}<br><a href="${esc(gcl(e))}" target="_blank" rel="noopener"><small>＋ Thêm vào Google Calendar</small></a></div>${e.ro?'':`<div class="row" style="flex:none"><button class="gh" data-a="evd" data-k="${e.id}" aria-label="Đánh dấu xong">${e.x?'↩':'✓'}</button><button class="gh" data-a="evx" data-k="${e.id}" aria-label="Xóa">🗑️</button></div>`}</div>`).join(''):'<div class="empty">Chưa có việc nào trong ngày này</div>');
+ const v=$('#ew').value;$('#ew').innerHTML='<option value="">Chưa phân công</option><option>Cả nhóm</option>'+A('mb').map(x=>`<option>${esc(x.n)}</option>`).join('');$('#ew').value=v}
+function rUp(){const t0=iso(new Date()),l=evs().filter(e=>e.d>=t0&&!e.x).sort((p,q)=>p.d.localeCompare(q.d)).slice(0,6),od=A('ev').filter(e=>e.d<t0&&!e.x).length;
+ $('#up').innerHTML=(od?`<p class="late">${od} việc trong lịch đã quá hạn mà chưa đánh dấu xong</p>`:'')+(l.length?l.map(e=>`<div class="it" style="border-left-color:${KT[e.k][1]}"><p><b>${e.d.split('-').reverse().slice(0,2).join('/')}</b> · ${esc(e.t)}${e.w?' · '+esc(e.w):''}</p></div>`).join(''):'<div class="empty">Chưa có việc sắp tới. Vào tab Lịch để thêm.</div>')}
+function rTeam(){
+ $('#mbl').innerHTML=A('mb').length?A('mb').map(m=>`<div class="it"><div><p><b>${esc(m.n)}</b>${m.r?' · '+esc(m.r):''}</p><small class="mut">${esc(m.c||'')} · ${A('ev').filter(e=>e.w==m.n&&!e.x).length} việc đang chờ</small></div><button class="gh" data-a="mbx" data-k="${m.id}" aria-label="Xóa">🗑️</button></div>`).join(''):'<div class="empty">Chưa có thành viên</div>';
+ $('#lkl').innerHTML=A('lk').length?A('lk').map(l=>`<div class="it"><div><p><a href="${esc(l.u)}" target="_blank" rel="noopener">${LI[l.c]||'🔗'} ${esc(l.t)}</a></p><small class="mut">${LC[l.c]||''}</small></div><div class="row" style="flex:none"><button class="gh" data-a="lkc" data-k="${l.id}" aria-label="Sao chép">📋</button><button class="gh" data-a="lkx" data-k="${l.id}" aria-label="Xóa">🗑️</button></div></div>`).join(''):'<div class="empty">Chưa có liên kết</div>'}
+$('#ek').innerHTML=KT.map((x,i)=>`<option value="${i}">${x[0]}</option>`).join('');$('#lc').innerHTML=LC.map((x,i)=>`<option value="${i}">${x}</option>`).join('');
+let dbr=null,sub=0,tmr=0,lastJ='';const setSs=m=>{$('#ss').textContent=m},mg=(a,b)=>[...new Map([...a,...b].map(x=>[x.id,x])).values()],snap=()=>JSON.stringify([A('ev'),A('lk'),A('mb')]);
+function push(){if(!dbr)return;const j=snap();if(j==lastJ)return;clearTimeout(tmr);tmr=setTimeout(()=>{lastJ=j;dbr.set({ev:JSON.parse(JSON.stringify(A('ev'))),lk:JSON.parse(JSON.stringify(A('lk'))),mb:JSON.parse(JSON.stringify(A('mb'))),at:Date.now()}).catch(e=>setSs('Không ghi được lên nhóm: '+(e.message||e)))},600)}
+async function sync(){try{const db=await claude.use('db');if(!db)return setSs('Chưa bật được đồng bộ. Hãy mở trang bằng link claude.ai và đăng nhập, sau đó thử lại.');
+ dbr=db.doc('team/main');S.team=1;try{localStorage.setItem('nckh',JSON.stringify(S))}catch(e){}if(sub)sub();let first=1;
+ sub=dbr.onSnapshot(s=>{if(s.metadata.hasPendingWrites)return;const d=s.exists?s.data():null;
+  if(d){if(first){S.ev=mg(A('ev'),d.ev||[]);S.lk=mg(A('lk'),d.lk||[]);S.mb=mg(A('mb'),d.mb||[])}else{S.ev=d.ev||[];S.lk=d.lk||[];S.mb=d.mb||[]}}
+  try{localStorage.setItem('nckh',JSON.stringify(S))}catch(e){}
+  lastJ=snap();if(first&&(!d||lastJ!=JSON.stringify([d.ev||[],d.lk||[],d.mb||[]])))lastJ='';first=0;push();rCal();rTeam();rUp();setSs('Đang đồng bộ lịch, thành viên và liên kết với nhóm')},e=>setSs('Lỗi đồng bộ: '+(e.message||e)))}catch(e){setSs('Không bật được đồng bộ trên trang này: '+(e.message||e))}}
+if(S.team)setTimeout(sync,400);
+const DEF=JSON.stringify(ST);let fe='';
+const syf=()=>{if(S.flow&&S.flow!==ST)ST.splice(0,ST.length,...S.flow);S.flow=ST};
+function prog(){const tot=ST.reduce((a,s)=>a+s[1].length,0),d=ST.reduce((a,s,i)=>a+s[1].filter((_,j)=>S.done[i+'-'+j]).length,0);return[d,tot,tot?Math.round(d/tot*100):0]}
+const rekey=(i,j)=>{const n={};for(const key in S.done){if(!S.done[key])continue;let[a,b]=key.split('-').map(Number);if(j<0){if(a==i)continue;if(a>i)a--}else if(a==i){if(b==j)continue;if(b>j)b--}n[a+'-'+b]=true}S.done=n};
+function rFlow(){W.length=ST.length;for(let i=0;i<ST.length;i++)W[i]=W[i]||1;
+ const ed=(key,txt)=>fe==key?`<span class="row" style="flex:1;flex-wrap:nowrap"><input id="fei" value="${esc(txt)}" style="margin:0"><button class="gh" data-a="fs" data-k="${key}" aria-label="Lưu">✓</button><button class="gh" data-a="fe" data-k="" aria-label="Hủy">✕</button></span>`:'';
+ $('#flow').innerHTML=`<div class="card" style="grid-column:1/-1"><h3>Thêm bước mới vào quy trình</h3><div class="row" style="margin-top:8px"><input id="nsn" placeholder="Ví dụ: Xin ý kiến chuyên gia" style="flex:1;min-width:200px;margin:0"><button class="btn" data-a="sa">Thêm bước</button><button class="gh" data-a="sr">Khôi phục mặc định</button></div><small class="mut">Bấm ✏️ để sửa tên, 🗑️ để xóa bước, ✕ để xóa từng việc, ô cuối mỗi bước để thêm việc.</small></div>`+ST.map((s,i)=>{const d=s[1].filter((_,j)=>S.done[i+'-'+j]).length,n=s[1].length,p=n?Math.round(d/n*100):0,k='s'+i,e0=ed(k,s[0]);
+  return`<div class="card st"><div class="sh"><span class="num">${i+1}</span>${e0||`<div><h3>${esc(s[0])}</h3><small class="mut">${d}/${n} việc</small></div>`}<b>${p}%</b><button class="gh" data-a="fe" data-k="${k}" aria-label="Sửa">✏️</button><button class="gh" data-a="sd" data-i="${i}" aria-label="Xóa bước">🗑️</button></div><div class="bar"><i style="width:${p}%"></i></div>${s[1].map((t,j)=>{const q='i'+i+'-'+j,e1=ed(q,t);return e1?`<div class="ck">${e1}</div>`:`<div class="ck"><label style="display:flex;gap:10px;align-items:center;margin:0;flex:1;font-weight:400;cursor:pointer"><input type="checkbox" data-a="tog" data-k="${i}-${j}" ${S.done[i+'-'+j]?'checked':''}>${esc(t)}</label><button class="gh" data-a="fe" data-k="${q}" aria-label="Sửa">✏️</button><button class="gh" data-a="id" data-i="${i}" data-k="${j}" aria-label="Xóa việc">✕</button></div>`}).join('')}<div class="row" style="margin-top:8px;flex-wrap:nowrap"><input id="ai${i}" placeholder="Thêm việc mới..." style="margin:0"><button class="gh" data-a="ia" data-i="${i}" aria-label="Thêm việc">＋</button></div></div>`}).join('')}
+function rTasks(){const today=new Date().toISOString().slice(0,10);$('#tasks').innerHTML=STN.map((n,k)=>{const l=S.tasks.map((t,i)=>[t,i]).filter(x=>x[0].s==k);
+ return`<div class="card"><h3>${n} (${l.length})</h3>${l.length?l.map(([t,i])=>{const e=fe=='t'+i;return`<div class="it k${k}"><div style="flex:1">${e?`<input id="fei" value="${esc(t.n)}" style="margin:0"><div class="row" style="margin-top:6px"><button class="gh" data-a="fs" data-k="t${i}">✓ Lưu</button><button class="gh" data-a="fe" data-k="">Hủy</button></div>`:`<p>${esc(t.n)}</p>${t.d?`<small class="${t.d<today&&k<2?'late':'mut'}">Hạn ${t.d.split('-').reverse().join('/')}</small>`:''}`}</div>${e?'':`<div class="row" style="flex:none;gap:4px">${k?`<button class="gh" data-a="mv" data-i="${i}" data-k="-1" aria-label="Lùi">←</button>`:''}${k<2?`<button class="gh" data-a="mv" data-i="${i}" data-k="1" aria-label="Tiến">→</button>`:''}<button class="gh" data-a="fe" data-k="t${i}" aria-label="Sửa">✏️</button><button class="gh" data-a="delTask" data-i="${i}" aria-label="Xóa">🗑️</button></div>`}</div>`}).join(''):'<div class="empty">Trống</div>'}</div>`}).join('')}
+function rNotes(){$('#notes').innerHTML=S.notes.length?S.notes.map((n,i)=>[n,i]).reverse().map(([n,i])=>{const e=fe=='n'+i;return`<div class="it"><div style="flex:1"><small class="mut">${esc(n.at)}</small>${e?`<textarea id="fei" style="margin:6px 0">${esc(n.t)}</textarea><div class="row"><button class="gh" data-a="fs" data-k="n${i}">✓ Lưu</button><button class="gh" data-a="fe" data-k="">Hủy</button></div>`:`<p>${esc(n.t).replace(/\n/g,'<br>')}</p>`}</div>${e?'':`<div class="row" style="flex:none"><button class="gh" data-a="fe" data-k="n${i}" aria-label="Sửa">✏️</button><button class="gh" data-a="delNote" data-i="${i}" aria-label="Xóa">🗑️</button></div>`}</div>`}).join(''):'<div class="empty">Chưa có ghi chú. Hãy ghi lại điều bạn vừa học được hôm nay.</div>'}
+const SL=[['Google Scholar',q=>'https://scholar.google.com/scholar?q='+q],['Semantic Scholar',q=>'https://www.semanticscholar.org/search?q='+q],['CORE',q=>'https://core.ac.uk/search?q='+q],['Tạp chí VN (VJOL)',q=>'https://www.google.com/search?q='+q+'+site%3Avjol.info.vn'],['Tìm file PDF',q=>'https://www.google.com/search?q='+q+'+filetype%3Apdf']];
+const rsl=()=>{const q=encodeURIComponent($('#sq').value.trim());$('#sl').innerHTML=SL.map(s=>`<a class="gh" style="text-decoration:none" href="${esc(s[1](q))}" target="_blank" rel="noopener">${s[0]}</a>`).join('')};
+const nf=x=>new Intl.NumberFormat('vi-VN').format(x);
+function rBud(){const l=A('bud'),t=l.reduce((s,x)=>s+x.p*x.q,0);$('#bl').innerHTML=l.length?l.map(x=>`<div class="it"><div><p><b>${esc(x.n)}</b></p><small class="mut">${nf(x.p)} đ × ${x.q} = ${nf(x.p*x.q)} đ</small></div><button class="gh" data-a="bx" data-k="${x.id}" aria-label="Xóa">🗑️</button></div>`).join('')+`<div class="res"><small class="mut">Tổng kinh phí</small><br><b>${nf(t)}</b> đ</div>`:'<div class="empty">Chưa có khoản chi nào</div>'}
+const GL=[['Biến độc lập','Yếu tố được cho là nguyên nhân hoặc tác động lên biến khác.'],['Biến phụ thuộc','Kết quả được đo để xem có thay đổi hay không.'],['Giả thuyết','Dự đoán có thể kiểm chứng về mối quan hệ giữa các biến.'],['Tổng thể và mẫu','Tổng thể là toàn bộ đối tượng quan tâm; mẫu là phần được chọn để khảo sát.'],['p-value','Xác suất thu được kết quả như quan sát nếu giả thuyết không đúng. Thường p < 0,05 được xem là có ý nghĩa thống kê.'],['Khoảng tin cậy','Khoảng giá trị có khả năng chứa giá trị thật của tổng thể, ví dụ 95%.'],['Độ tin cậy','Mức nhất quán của thang đo, thường đo bằng Cronbach’s Alpha.'],['Độ giá trị','Thang đo có thật sự đo đúng điều cần đo hay không.'],['Thang Likert','Thang đo mức độ đồng ý, thường 5 mức từ rất không đồng ý đến rất đồng ý.'],['Sai lệch chọn mẫu','Mẫu không đại diện cho tổng thể nên kết quả bị lệch.'],['Nghiên cứu định tính','Tìm hiểu ý nghĩa và trải nghiệm qua phỏng vấn, quan sát, thảo luận nhóm.'],['Nghiên cứu định lượng','Dùng số liệu và kiểm định thống kê để trả lời câu hỏi nghiên cứu.'],['Đạo văn','Dùng ý tưởng hoặc câu chữ của người khác mà không trích dẫn.'],['Cỡ ảnh hưởng','Độ lớn của khác biệt hoặc mối quan hệ, ví dụ Cohen’s d, r, η².']];
+const rGl=()=>{const q=$('#gq').value.trim().toLowerCase(),l=GL.filter(g=>!q||(g[0]+g[1]).toLowerCase().includes(q));$('#gl').innerHTML=l.length?l.map(g=>`<details><summary>${g[0]}</summary><p>${g[1]}</p></details>`).join(''):'<div class="empty">Không tìm thấy thuật ngữ</div>'};
+$('#p-more').addEventListener('input',()=>{rsl();rGl()});
+$('#nav').addEventListener('wheel',e=>{if(Math.abs(e.deltaY)>Math.abs(e.deltaX)){e.preventDefault();$('#nav').scrollLeft+=e.deltaY}},{passive:false});
+const rAll=()=>{syf();rStats();rFlow();rRefs();rTasks();rNotes();calc();rGantt();rRep();exF();pd();rCal();rTeam();rUp();rsl();rGl();rBud();$('#ol').value=ol()};
+
+document.addEventListener('click',e=>{const el=e.target.closest('[data-a]');if(!el)return;const a=el.dataset.a,k=el.dataset.k,i=+el.dataset.i;
+ if(a=='ns'){$('#nav').scrollBy({left:+k*260,behavior:'smooth'});return}
+ if(a=='tab'){el.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'});$$('.panel').forEach(p=>p.classList.toggle('on',p.id=='p-'+k));$$('#nav button').forEach(b=>b.classList.toggle('on',b==el));if(k=='dash'){rStats();rUp()}if(k=='gantt')rGantt();if(k=='cal')rCal();if(k=='team')rTeam();if(k=='rep')rRep();return}
+ if(a=='theme'){const d=document.documentElement,dk=d.dataset.theme?d.dataset.theme=='dark':matchMedia('(prefers-color-scheme:dark)').matches;d.dataset.theme=dk?'light':'dark';return}
+ if(a=='tog'){S.done[k]=el.checked;rFlow()}
+ else if(a=='addRef'){const au=$('#ra').value.trim(),t=$('#rn').value.trim();if(!au||!t)return toast('Cần nhập tác giả và tiêu đề');
+  S.refs.push({a:au,y:$('#ry').value.trim()||'n.d.',t,s:$('#rs').value.trim(),u:$('#ru').value.trim()});['ra','ry','rn','rs','ru'].forEach(x=>$('#'+x).value='');rRefs();toast('Đã thêm tài liệu')}
+ else if(a=='delRef'){S.refs.splice(i,1);rRefs()}
+ else if(a=='cpRef')return cp(fmt(S.refs[i]));
+ else if(a=='cpAll'){if(!S.refs.length)return toast('Danh sách đang trống');return cp(S.refs.map(fmt).sort((x,y)=>x.localeCompare(y,'vi')).join('\n\n'))}
+ else if(a=='addTask'){const n=$('#tn').value.trim();if(!n)return toast('Hãy nhập tên công việc');S.tasks.push({n,d:$('#td').value,s:0});$('#tn').value='';rTasks();toast('Đã thêm công việc')}
+ else if(a=='mv'){S.tasks[i].s+=+k;rTasks()}
+ else if(a=='delTask'){S.tasks.splice(i,1);rTasks()}
+ else if(a=='addNote'){const t=$('#nt').value.trim();if(!t)return toast('Hãy viết nội dung ghi chú');S.notes.push({t,at:new Date().toLocaleString('vi-VN')});$('#nt').value='';rNotes();toast('Đã lưu ghi chú')}
+ else if(a=='delNote'){S.notes.splice(i,1);rNotes()}
+ else if(a=='cpOl')return cp(ol());
+ else if(a=='an')return an2(k);
+ else if(a=='day'){cs=k;const d=new Date(k+'T00:00:00');cm=new Date(d.getFullYear(),d.getMonth(),1);rCal();return}
+ else if(a=='cm'){cm=new Date(cm.getFullYear(),cm.getMonth()+(+k),1);rCal();return}
+ else if(a=='ct'){cs=iso(new Date());cm=new Date();cm.setDate(1);rCal();return}
+ else if(a=='evadd'){const t=$('#et').value.trim();if(!t)return toast('Hãy nhập nội dung công việc');const n=Math.max(1,Math.min(52,+$('#er').value||1));let l=$('#el').value.trim();if(l&&!/^https?:/i.test(l))l='https://'+l;
+  for(let j=0;j<n;j++){const d=new Date(cs+'T00:00:00');d.setDate(d.getDate()+7*j);A('ev').push({id:uid(),d:iso(d),t,k:+$('#ek').value,tm:$('#etm').value,w:$('#ew').value,l})}
+  ['et','el'].forEach(x=>$('#'+x).value='');rCal();toast('Đã thêm vào lịch')}
+ else if(a=='evd'){const v=A('ev').find(x=>x.id==k);if(v)v.x=!v.x;rCal()}
+ else if(a=='evx'){S.ev=A('ev').filter(x=>x.id!=k);rCal()}
+ else if(a=='mbadd'){const n=$('#mn').value.trim();if(!n)return toast('Hãy nhập tên thành viên');A('mb').push({id:uid(),n,r:$('#mr').value.trim(),c:$('#mc').value.trim()});['mn','mr','mc'].forEach(x=>$('#'+x).value='');rTeam();rCal()}
+ else if(a=='mbx'){S.mb=A('mb').filter(x=>x.id!=k);rTeam();rCal()}
+ else if(a=='lkadd'){const t=$('#ln').value.trim();let u=$('#lu').value.trim();if(!t||!u)return toast('Cần nhập tên và đường dẫn');if(!/^https?:/i.test(u))u='https://'+u;A('lk').push({id:uid(),t,u,c:+$('#lc').value});['ln','lu'].forEach(x=>$('#'+x).value='');rTeam()}
+ else if(a=='lkx'){S.lk=A('lk').filter(x=>x.id!=k);rTeam()}
+ else if(a=='lkc')return cp(A('lk').find(x=>x.id==k).u);
+ else if(a=='sync')return sync();
+ else if(a=='inv')return cp('Mời bạn cùng làm đề tài NCKH: '+(S.title||'(chưa đặt tên)')+'\nHạn nộp: '+(S.dl?S.dl.split('-').reverse().join('/'):'(chưa đặt)')+'\nMở NCKH Studio: https://claude.ai/artifact/L9EPEMhNZNKbC2bhS5Zjyo\nSau khi mở, vào tab Nhóm và bấm Bật đồng bộ nhóm để dùng chung lịch, thành viên và liên kết.');
+ else if(a=='wk'){const t0=iso(new Date()),t1=iso(new Date(Date.now()+7*864e5)),l=evs().filter(v=>v.d>=t0&&v.d<=t1&&!v.x).sort((x,y)=>x.d.localeCompare(y.d));return cp('TÓM TẮT TUẦN - '+(S.title||'NCKH')+'\n'+(l.length?l.map(v=>'- '+v.d.split('-').reverse().join('/')+(v.tm?' '+v.tm:'')+': '+v.t+(v.w?' ('+v.w+')':'')).join('\n'):'Không có việc nào trong 7 ngày tới'))}
+ else if(a=='minute'){const m=$('#mm').value.trim();if(!m)return toast('Hãy nhập nội dung họp');S.notes.push({t:'BIÊN BẢN HỌP NHÓM\nThành viên: '+(A('mb').map(x=>x.n).join(', ')||'...')+'\nNội dung: '+m+'\nQuyết định: '+$('#mq').value.trim()+'\nViệc tiếp theo: '+$('#mv').value.trim(),at:new Date().toLocaleString('vi-VN')});['mm','mq','mv'].forEach(x=>$('#'+x).value='');rNotes();toast('Đã lưu biên bản vào Nhật ký')}
+ else if(a=='fe'){fe=k;rFlow();rTasks();rNotes();if(k)setTimeout(()=>{const x=$('#fei');if(x)x.focus()});return}
+ else if(a=='fs'){const fi=$('#fei'),v=fi?fi.value.trim():'';if(v){const c=k[0],r=k.slice(1);if(c=='s')ST[+r][0]=v;else if(c=='i'){const[p,q]=r.split('-');ST[+p][1][+q]=v}else if(c=='t')S.tasks[+r].n=v;else if(c=='n')S.notes[+r].t=v}fe='';rFlow();rTasks();rNotes()}
+ else if(a=='sa'){const v=$('#nsn').value.trim();if(!v)return toast('Hãy nhập tên bước');ST.push([v,[]]);rFlow();toast('Đã thêm bước mới')}
+ else if(a=='sd'){ST.splice(i,1);rekey(i,-1);rFlow()}
+ else if(a=='ia'){const v=$('#ai'+i).value.trim();if(!v)return;ST[i][1].push(v);rFlow()}
+ else if(a=='id'){ST[i][1].splice(+k,1);rekey(i,+k);rFlow()}
+ else if(a=='sr'){ST.splice(0,ST.length,...JSON.parse(DEF));S.done={};fe='';rFlow();toast('Đã khôi phục quy trình mặc định')}
+ else if(a=='bad'){const n=$('#bn').value.trim(),p=+$('#bp').value,q=+$('#bq').value||1;if(!n||!(p>=0)||$('#bp').value==='')return toast('Hãy nhập khoản mục và đơn giá');A('bud').push({id:uid(),n,p,q});['bn','bp'].forEach(x=>$('#'+x).value='');rBud()}
+ else if(a=='bx'){S.bud=A('bud').filter(x=>x.id!=k);rBud()}
+ else if(a=='lqg'){const l=$('#lq').value.split('\n').map(x=>x.trim()).filter(Boolean);if(!l.length)return toast('Hãy nhập ít nhất một phát biểu');$('#lqo').value='BẢNG CÂU HỎ\n(1 = Rất không đồng ý, 2 = Không đồng ý, 3 = Phân vân, 4 = Đồng ý, 5 = Rất đồng ý)\n\n'+l.map((x,j)=>(j+1)+'. '+x+'   [1] [2] [3] [4] [5]').join('\n')}
+ else if(a=='lqc')return cp($('#lqo').value);
+ else if(a=='ps')return ptg();
+ else if(a=='pr')return prs();
+ else if(a=='rsm')return rsm();
+ else if(a=='cpRes')return cp($('#ao').innerText);
+ else if(a=='saveRes'){const t=$('#ao').innerText.trim();if(!t||t.startsWith('Kết quả sẽ')||t.startsWith('Cần')||t.startsWith('Phép'))return toast('Hãy chạy một phép phân tích trước');S.saved.push(t);toast('Đã lưu vào báo cáo')}
+ else if(a=='clrRes'){S.saved=[];rRep();toast('Đã xóa kết quả đã lưu')}
+ else if(a=='cpRep')return cp(rep());
+ else if(a=='cpBk')return cp(JSON.stringify(S));
+ else if(a=='rest'){try{S=Object.assign({title:'',dl:'',done:{},refs:[],tasks:[],notes:[],saved:[],gs:''},JSON.parse($('#bk').value));$('#ti').value=S.title;$('#dl').value=S.dl;rAll();toast('Đã khôi phục dữ liệu')}catch(x){return toast('Bản sao lưu không hợp lệ')}}
+ save();rStats();rUp()});
+$('#ti').value=S.title;$('#dl').value=S.dl;
+$('#ti').addEventListener('input',e=>{S.title=e.target.value;save();rStats();$('#ol').value=ol()});
+$('#dl').addEventListener('input',e=>{S.dl=e.target.value;save();rStats()});
+$('#p-tools').addEventListener('input',calc);
+addEventListener('pointermove',e=>{const s=document.documentElement.style;s.setProperty('--x',e.clientX+'px');s.setProperty('--y',e.clientY+'px')});
+let ti=0;const tp=$('#tip');tp.textContent=TIPS[0];
+setInterval(()=>{tp.style.opacity=0;setTimeout(()=>{ti=(ti+1)%TIPS.length;tp.textContent=TIPS[ti];tp.style.opacity=1},400)},7000);
+rAll();
+
+</script>
+<!-- NCKH Studio: khối mã mới (Quy trình sửa được, APA 7, thống kê, công cụ cỡ mẫu). Dán nguyên khối này ngay trước thẻ đóng body của file hiện tại. -->
+<style>.ed{display:flex;gap:6px;align-items:center;margin-top:8px}.ed input,.sh input{margin:0;min-width:0;flex:1}.ed .gh,.sh .gh{flex:none;padding:6px 9px}.sh input{font-weight:600}</style>
+<script>
+(()=>{
+const w=(x,a='',b='')=>x?a+x+b:'',H=s=>esc(s).replace(/\*([^*]+)\*/g,'<i>$1</i>'),P=s=>s.replace(/\*/g,'');
+let ED=0,AT=0,AV={};
+const rmap=g=>{const n={};for(const k in S.done)if(S.done[k]){const[a,b]=k.split('-').map(Number),r=g(a,b);n[r[0]+'-'+r[1]]=1}S.done=n};
+const mvb=(a,i,k)=>[-1,1].map(d=>`<button class="gh" data-a="${a}" data-i="${i}" data-k="${k}" data-d="${d}" aria-label="${d<0?'Lên':'Xuống'}">${d<0?'▲':'▼'}</button>`).join('');
+/* ===== Quy trình: chế độ chỉnh sửa ===== */
+rFlow=function(){
+ W.length=ST.length;for(let i=0;i<ST.length;i++)W[i]=W[i]||1;
+ $('#p-flow h2').textContent='Quy trình '+ST.length+' bước';
+ const top=ED?`<div class="card" style="grid-column:1/-1"><div class="row"><input id="nsn" placeholder="Tên bước mới, ví dụ: Xin ý kiến chuyên gia" style="flex:1;min-width:200px;margin:0"><button class="btn" data-a="sa">Thêm bước</button><button class="gh" data-a="sr">Khôi phục mặc định</button><button class="btn" data-a="em">✓ Hoàn tất</button></div><small class="mut">Sửa trực tiếp trong ô nhập, mọi thay đổi tự lưu. Dùng ▲ ▼ để đổi thứ tự.</small></div>`:`<div class="row" style="grid-column:1/-1;justify-content:flex-end"><button class="gh" data-a="em">✏️ Chỉnh sửa</button></div>`;
+ const step=(s,i)=>{
+  const n=s[1].length,d=s[1].filter((_,j)=>S.done[i+'-'+j]).length,p=n?Math.round(d/n*100):0;
+  const hd=ED?`<input data-f="s" data-i="${i}" value="${esc(s[0])}" aria-label="Tên bước">${mvb('su',i,'')}<button class="gh" data-a="sd" data-i="${i}" aria-label="Xóa bước">🗑️</button>`:`<div><h3>${esc(s[0])}</h3><small class="mut">${d}/${n} việc</small></div><b>${p}%</b>`;
+  const ts=s[1].map((t,j)=>ED?`<div class="ed"><input data-f="t" data-i="${i}" data-k="${j}" value="${esc(t)}" aria-label="Tên việc">${mvb('iu',i,j)}<button class="gh" data-a="id" data-i="${i}" data-k="${j}" aria-label="Xóa việc">✕</button></div>`:`<label class="ck"><input type="checkbox" data-a="tog" data-k="${i}-${j}" ${S.done[i+'-'+j]?'checked':''}>${esc(t)}</label>`).join('');
+  return`<div class="card st"><div class="sh"><span class="num">${i+1}</span>${hd}</div>${ED?'':`<div class="bar"><i style="width:${p}%"></i></div>`}${ts}${ED?`<div class="ed"><input id="ai${i}" placeholder="Thêm việc mới..."><button class="gh" data-a="ia" data-i="${i}" aria-label="Thêm việc">＋</button></div>`:''}</div>`};
+ $('#flow').innerHTML=top+ST.map(step).join('');
+};
+$('#flow').addEventListener('input',e=>{const t=e.target,d=t.dataset;if(d.f=='s')ST[+d.i][0]=t.value;else if(d.f=='t')ST[+d.i][1][+d.k]=t.value;else return;save()});
+/* ===== APA 7 ===== */
+const AP=[
+['Bài báo tạp chí','Tác giả','Tiêu đề bài báo',[['s','Tên tạp chí'],['v','Tập'],['i','Số'],['p','Trang (45-60)']],d=>`${d.t}. ${w(d.s,'*','*')}${w(d.v,', *','*')}${w(d.i,'(',')')}${w(d.p,', ')}.`],
+['Sách','Tác giả','Tên sách',[['e','Lần xuất bản (nếu có)'],['s','Nhà xuất bản']],d=>`*${d.t}*${w(d.e,' (xuất bản lần ',')')}. ${w(d.s,'','.')}`],
+['Chương sách','Tác giả chương','Tên chương',[['e','Biên tập (Trần, V. B.)'],['s','Tên sách'],['p','Trang'],['n','Nhà xuất bản']],d=>`${d.t}. Trong ${w(d.e,'',' (Biên tập), ')}*${d.s||'[Tên sách]'}*${w(d.p,' (tr. ',')')}. ${w(d.n,'','.')}`],
+['Website','Tác giả hoặc tổ chức','Tiêu đề trang',[['s','Tên website (nếu khác tác giả)']],d=>`*${d.t}*. ${w(d.s,'','.')}`],
+['Báo mạng','Tác giả','Tiêu đề bài viết',[['s','Tên báo']],d=>`${d.t}. ${w(d.s,'*','*.')}`],
+['Luận văn, luận án','Tác giả','Tên luận văn',[['e','Loại (Luận văn thạc sĩ...)'],['s','Trường đại học']],d=>`*${d.t}* [${d.e||'Luận văn'}${w(d.s,', ')}].`],
+['Báo cáo','Tác giả hoặc tổ chức','Tên báo cáo',[['e','Số báo cáo'],['s','Đơn vị xuất bản (nếu khác tác giả)']],d=>`*${d.t}*${w(d.e,' (Báo cáo số ',')')}. ${w(d.s,'','.')}`],
+['Video','Người đăng hoặc kênh','Tiêu đề video',[['s','Nền tảng (YouTube...)']],d=>`*${d.t}* [Video]. ${w(d.s,'','.')}`],
+['Hội thảo','Tác giả','Tên báo cáo',[['s','Tên hội thảo'],['l','Địa điểm']],d=>`*${d.t}* [Báo cáo tại hội thảo]. ${[d.s,d.l].filter(Boolean).join(', ')}.`],
+['Văn bản pháp luật','Cơ quan ban hành','Tên văn bản',[['e','Số hiệu (Luật số 45/2019/QH14)']],d=>`*${d.t}*${w(d.e,' (',')')}.`],
+['Công cụ AI','Nhà phát triển (OpenAI...)','Tên công cụ',[['e','Phiên bản'],['s','Mô tả (Mô hình ngôn ngữ lớn)']],d=>`*${d.t}*${w(d.e,' (',')')} [${d.s||'Mô hình ngôn ngữ lớn'}].`]];
+const dot=s=>/[.?!]$/.test(s)?s:s+'.',lk=u=>{u=(u||'').trim();return/^10\.\d{4,}/.test(u)?'https://doi.org/'+u:u.replace(/^doi:\s*/i,'https://doi.org/')};
+const ref=e=>{const d=Object.assign(Object.fromEntries([...'aytsevipnlu'].map(k=>[k,''])),e.d);d.t=d.t||'[Tiêu đề]';d.u=lk(d.u);return(dot(d.a||'[Tác giả]')+' ('+(d.y||'n.d.')+'). '+AP[e.k][4](d)+' '+d.u).replace(/\s+\./g,'.').replace(/([.?!])\.(?=\s|$)/g,'$1').replace(/\s+/g,' ').trim()};
+const AU=a=>{const t=a.split(/\s*[,;&]\s*/).filter(Boolean),i=/^(\p{Lu}\.?[\s\-]*)+$/u;return t.some(x=>i.test(x))?t.filter(x=>!i.test(x)):[a.replace(/\.$/,'').trim()]};
+const IT=e=>{const s=AU(e.d.a||''),y=e.d.y||'n.d.',n=s.length,q=p=>n>2?s[0]+' et al.':n==2?s[0]+(p?' & ':' và ')+s[1]:s[0]||'';return['('+q(1)+', '+y+')',q(0)+' ('+y+')']};
+const cpH=(h,t)=>{try{const d=document.createElement('div');d.innerHTML=h;d.style.cssText='position:fixed;left:-9999px;top:0';document.body.appendChild(d);const r=document.createRange();r.selectNodeContents(d);const s=getSelection();s.removeAllRanges();s.addRange(r);const ok=document.execCommand('copy');s.removeAllRanges();d.remove();ok?toast('Đã sao chép, giữ chữ nghiêng'):cp(t)}catch(x){cp(t)}};
+const hp=e=>`<p style="margin:0 0 0 36pt;text-indent:-36pt;font:12pt 'Times New Roman',serif">${H(ref(e))}</p>`;
+const apv=()=>{const e={k:AT,d:AV};$('#apv').innerHTML=AV.a||AV.t?`<small class="mut">Tài liệu tham khảo</small><p style="margin:4px 0 10px">${H(ref(e))}</p><small class="mut">Trích dẫn trong văn bản</small><p style="margin:4px 0 0">${esc(IT(e).join('  hoặc  '))}</p>`:'<div class="empty">Bản xem trước hiện ở đây khi bạn nhập.</div>'};
+const apf=()=>{const T=AP[AT];$('#at').value=AT;$('#af').innerHTML=[['a',T[1]],['y','Năm (hoặc ngày tháng)'],['t',T[2]]].concat(T[3],[['u','Link hoặc DOI']]).map(x=>`<label>${x[1]}<input data-ak="${x[0]}" value="${esc(AV[x[0]]||'')}"></label>`).join('');apv()};
+const apl=()=>{const L=A('apa').map((e,i)=>({i,t:ref(e)})).sort((x,y)=>x.t.localeCompare(y.t,'vi'));$('#apl').innerHTML=L.length?L.map(x=>`<div class="it"><div><p>${H(x.t)}</p><small class="mut">${esc(IT(S.apa[x.i])[0])}</small></div><div class="row" style="flex:none"><button class="gh" data-a="apcp" data-i="${x.i}" aria-label="Sao chép tài liệu tham khảo">📋</button><button class="gh" data-a="apit" data-i="${x.i}" aria-label="Sao chép trích dẫn trong văn bản">(…)</button><button class="gh" data-a="apedit" data-i="${x.i}" aria-label="Sửa">✏️</button><button class="gh" data-a="apdel" data-i="${x.i}" aria-label="Xóa">🗑️</button></div></div>`).join(''):'<div class="empty">Chưa có nguồn nào. Nhập ở trên rồi bấm Thêm vào danh sách.</div>'};
+$('#nav').children[2].insertAdjacentHTML('afterend','<button data-a="tab" data-k="apa">📑 APA 7</button>');
+$('#p-refs').insertAdjacentHTML('afterend',`<section class="panel" id="p-apa"><div class="card"><h2>Trích dẫn APA 7</h2><p class="mut" style="margin-top:0"><small>Chọn loại nguồn, dán link hoặc DOI, nhập tác giả và tiêu đề. Công cụ không tự tải thông tin từ link.</small></p><label>Loại nguồn<select id="at">${AP.map((x,i)=>`<option value="${i}">${x[0]}</option>`).join('')}</select></label><div class="g2" id="af" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr))"></div><div class="row"><button class="btn" data-a="apadd">Thêm vào danh sách</button><button class="gh" data-a="apclr">Xóa ô nhập</button></div><div class="res" id="apv"></div></div><div class="card" style="margin-top:16px"><h3>Chế độ nhanh: dán nhiều link</h3><p class="mut" style="margin:4px 0 0"><small>Mỗi dòng một nguồn theo loại đang chọn: Tác giả | Năm | Tiêu đề | link. Có thể chỉ dán link rồi bấm Sửa để bổ sung sau.</small></p><textarea id="apq" placeholder="Nguyễn, V. A. | 2023 | Tên bài viết | https://doi.org/10.1234/abc&#10;https://example.com/bai-viet"></textarea><button class="btn" data-a="apq" style="margin-top:12px">Thêm tất cả</button></div><div class="card" style="margin-top:16px"><div class="row" style="justify-content:space-between"><h3>Danh sách tài liệu tham khảo (A-Z)</h3><div class="row"><button class="gh" data-a="apall" data-k="h">Sao chép giữ chữ nghiêng</button><button class="gh" data-a="apall" data-k="t">Sao chép văn bản thuần</button></div></div><div id="apl"></div></div></section>`);
+$('#p-apa').addEventListener('input',e=>{const k=e.target.dataset.ak;if(k){AV[k]=e.target.value;apv()}});
+$('#at').addEventListener('change',e=>{AT=+e.target.value;apf()});
+/* ===== Thống kê ===== */
+const rk=a=>{const s=a.map((v,i)=>[v,i]).sort((x,y)=>x[0]-y[0]),r=[];for(let i=0,j;i<s.length;i=j+1){j=i;while(j+1<s.length&&s[j+1][0]==s[i][0])j++;for(let q=i;q<=j;q++)r[s[q][1]]=(i+j)/2+1}return r};
+const inv=M=>{const n=M.length,B=M.map((r,i)=>r.concat(Array.from({length:n},(_,j)=>+(i==j))));for(let i=0;i<n;i++){let p=i;for(let r=i+1;r<n;r++)if(Math.abs(B[r][i])>Math.abs(B[p][i]))p=r;if(Math.abs(B[p][i])<1e-10)return null;[B[i],B[p]]=[B[p],B[i]];const d=B[i][i];B[i]=B[i].map(v=>v/d);for(let r=0;r<n;r++)if(r!=i){const m=B[r][i];B[r]=B[r].map((v,j)=>v-m*B[i][j])}}return B.map(r=>r.slice(n))};
+const tq=df=>{let l=0,h=200;for(let i=0;i<60;i++){const m=(l+h)/2;pT(m,df)>.05?l=m:h=m}return(l+h)/2},zq=q=>{let l=0,h=10;for(let i=0;i<60;i++){const m=(l+h)/2;1-gq(.5,m*m/2)>q?l=m:h=m}return(l+h)/2};
+const dag=x=>{const n=x.length,m=mean(x),M=q=>x.reduce((s,v)=>s+(v-m)**q,0)/n,m2=M(2),g1=M(3)/m2**1.5,g2=M(4)/m2**2-3,s1=Math.sqrt(6*n*(n-1)/((n-2)*(n+1)*(n+3))),Y=g1*Math.sqrt((n+1)*(n+3)/(6*(n-2))),b2=3*(n*n+27*n-70)*(n+1)*(n+3)/((n-2)*(n+5)*(n+7)*(n+9)),W2=-1+Math.sqrt(2*(b2-1)),dl=1/Math.sqrt(Math.log(W2)/2),al=Math.sqrt(2/(W2-1)),zs=dl*Math.asinh(Y/al),xx=(g2+3-3*(n-1)/(n+1))/Math.sqrt(24*n*(n-2)*(n-3)/((n+1)**2*(n+3)*(n+5))),sb=6*(n*n-5*n+2)/((n+7)*(n+9))*Math.sqrt(6*(n+3)*(n+5)/(n*(n-2)*(n-3))),AA=6+8/sb*(2/sb+Math.sqrt(1+4/(sb*sb))),zk=((1-2/(9*AA))-Math.cbrt((1-2/AA)/(1+xx*Math.sqrt(2/(AA-4)))))/Math.sqrt(2/(9*AA)),K=zs*zs+zk*zk;return[g1*Math.sqrt(n*(n-1))/(n-2),s1,(n-1)/((n-2)*(n-3))*((n+1)*g2+6),2*s1*Math.sqrt((n*n-1)/((n-3)*(n+5))),K,Math.exp(-K/2)]};
+const an3=t=>{
+ const c=cols(),o=$('#ao'),n=c[0]?c[0].length:0,k=c.length,E=m=>{o.innerHTML='<div class="empty">'+m+'</div>'},vn=i=>'Biến '+(i+1);let h='';
+ if(n<3)return E('Cần ít nhất 3 dòng dữ liệu số hợp lệ.');
+ if(['mr','sp','mw'].includes(t)&&k<2)return E('Phép phân tích này cần từ 2 cột trở lên.');
+ if(t=='ci')h=`<h3>Khoảng tin cậy 95% của trung bình (n = ${n})</h3>`+TB(['Biến','TB','ĐLC','Sai số chuẩn','Cận dưới','Cận trên'],c.map((x,i)=>{const m=mean(x),s=sd(x),se=s/Math.sqrt(n),q=tq(n-1)*se;return[vn(i),f(m),f(s),f(se),f(m-q),f(m+q)]}));
+ else if(t=='t1'){const m0=+$('#mu0').value;h=`<h3>t-test một mẫu (so với μ₀ = ${f(m0,2)})</h3>`+TB(['Biến','TB','t','df','p','TB − μ₀','Cohen’s d'],c.map((x,i)=>{const m=mean(x),s=sd(x),tv=(m-m0)/(s/Math.sqrt(n));return[vn(i),f(m),f(tv),n-1,pf(pT(tv,n-1)),f(m-m0),f((m-m0)/s,2)]}))+'<p class="mut"><small>p &lt; 0,05: trung bình mẫu khác μ₀ có ý nghĩa thống kê.</small></p>'}
+ else if(t=='fq')h=c.map((x,i)=>{const q=new Map();x.forEach(v=>q.set(v,(q.get(v)||0)+1));let u=0;return`<h3>Bảng tần số, ${vn(i)} (n = ${n})</h3>`+TB(['Giá trị','Tần số','%','% tích lũy'],[...q].sort((a,b)=>a[0]-b[0]).slice(0,40).map(([v,r])=>{u+=r;return[v,r,f(r/n*100,1),f(u/n*100,1)]}))}).join('');
+ else if(t=='sp'){const r=c.map(rk);h=`<h3>Tương quan hạng Spearman (n = ${n})</h3>`+TB([''].concat(c.map((_,i)=>vn(i))),r.map((x,i)=>[vn(i)].concat(r.map((y,j)=>{if(i==j)return'1';const q=pr(x,y),p=Math.abs(q)>=1?0:pT(q*Math.sqrt((n-2)/(1-q*q)),n-2);return f(q)+(p<.01?'**':p<.05?'*':'')}))))+'<p class="mut"><small>* p &lt; 0,05; ** p &lt; 0,01. Dùng khi dữ liệu thứ bậc hoặc không phân phối chuẩn.</small></p>'}
+ else if(t=='nm'){if(n<8)return E('Kiểm tra phân phối chuẩn cần ít nhất 8 dòng.');h=`<h3>Kiểm tra phân phối chuẩn (n = ${n})</h3>`+TB(['Biến','Skewness','SE','Kurtosis','SE','K²','p','Kết luận'],c.map((x,i)=>{const z=dag(x);return[vn(i),f(z[0]),f(z[1]),f(z[2]),f(z[3]),f(z[4]),pf(z[5]),`<span class="${z[5]>=.05?'ok':'late'}">${z[5]>=.05?'Xấp xỉ chuẩn':'Không chuẩn'}</span>`]}))+'<p class="mut"><small>Kiểm định D’Agostino–Pearson (K²) dựa trên Skewness và Kurtosis; p ≥ 0,05 là xấp xỉ phân phối chuẩn. Nhiều tài liệu cũng chấp nhận |Skewness| và |Kurtosis| không vượt quá 1 (hoặc 1,5).</small></p>'}
+ else if(t=='mw'){const N=2*n,r=rk(c[0].concat(c[1])),R1=r.slice(0,n).reduce((s,v)=>s+v,0),U1=R1-n*(n+1)/2,U=Math.min(U1,n*n-U1),q=new Map();r.forEach(v=>q.set(v,(q.get(v)||0)+1));const tc=[...q.values()].reduce((s,v)=>s+v**3-v,0),sg=Math.sqrt(n*n/12*(N+1-tc/(N*(N-1)))),z=Math.max(0,Math.abs(U-n*n/2)-.5)/sg,p=1-gq(.5,z*z/2);
+  h=`<h3>Mann-Whitney U (cột 1 so với cột 2, mỗi nhóm n = ${n})</h3>`+TB(['Hạng TB cột 1','Hạng TB cột 2','U','Z','p'],[[f(R1/n,2),f((N*(N+1)/2-R1)/n,2),f(U,1),f(z),pf(p)]])+vd(p)+'<p class="mut"><small>Dùng khi dữ liệu không phân phối chuẩn hoặc là thang thứ bậc. Hai cột phải có cùng số dòng.</small></p>'}
+ else{const p=k-1,y=c[p],xs=c.slice(0,p),X=Array.from({length:n},(_,r)=>[1].concat(xs.map(x=>x[r]))),Xt=X[0].map((_,q)=>X.map(r=>r[q])),Xi=inv(Xt.map(r=>Xt.map(s=>r.reduce((a,v,q)=>a+v*s[q],0))));
+  if(!Xi||n<=p+1)return E('Không tính được: các biến độc lập tương quan hoàn toàn hoặc thiếu dòng (cần n lớn hơn số biến độc lập + 1).');
+  const Xy=Xt.map(r=>r.reduce((a,v,q)=>a+v*y[q],0)),b=Xi.map(r=>r.reduce((a,v,q)=>a+v*Xy[q],0)),e=y.map((v,r)=>v-X[r].reduce((a,x,q)=>a+x*b[q],0)),sse=e.reduce((a,v)=>a+v*v,0),my=mean(y),sst=y.reduce((a,v)=>a+(v-my)**2,0),df=n-p-1,mse=sse/df,R2=1-sse/sst,F=(sst-sse)/p/mse,pF=ib(df/(df+p*F),df/2,p/2),Ri=inv(xs.map(x=>xs.map(z=>x===z?1:pr(x,z)))),dw=e.slice(1).reduce((a,v,r)=>a+(v-e[r])**2,0)/sse;
+  h=`<h3>Hồi quy tuyến tính bội (Y = cột ${k}, X = ${p} cột đầu, n = ${n})</h3>`+TB(['R²','R² hiệu chỉnh','F','df','p (mô hình)','Durbin-Watson'],[[f(R2),f(1-(1-R2)*(n-1)/df),f(F),p+', '+df,pf(pF),f(dw)]])+TB(['Biến','B','SE','β chuẩn hóa','t','p','VIF'],b.map((v,q)=>{const se=Math.sqrt(mse*Xi[q][q]),tv=v/se;return[q?vn(q-1):'Hằng số',f(v),f(se),q?f(v*sd(xs[q-1])/sd(y)):'–',f(tv),pf(pT(tv,df)),q&&Ri?f(Ri[q-1][q-1],2):'–']}))+'<p class="mut"><small>Cột cuối là biến phụ thuộc Y. VIF dưới 5 (chặt hơn: dưới 3) là không có đa cộng tuyến đáng kể. Durbin-Watson gần 2 (khoảng 1,5 đến 2,5) là không tự tương quan.</small></p>'}
+ o.innerHTML=h};
+$('#p-stat .row').insertAdjacentHTML('beforeend',[['mr','Hồi quy bội'],['sp','Spearman'],['nm','Phân phối chuẩn'],['mw','Mann-Whitney U'],['t1','t-test một mẫu'],['ci','Khoảng tin cậy 95%'],['fq','Bảng tần số']].map(x=>`<button class="btn" data-a="an3" data-k="${x[0]}">${x[1]}</button>`).join(''));
+$('#p-stat .row').insertAdjacentHTML('afterend','<label style="max-width:260px;margin-top:12px">Giá trị so sánh μ₀ (cho t-test một mẫu)<input id="mu0" type="number" step="any" value="3"></label>');
+/* ===== Công cụ ===== */
+$('#p-tools .g').insertAdjacentHTML('beforeend',`<div class="card"><h2>Cỡ mẫu EFA và hồi quy</h2><p class="mut" style="margin-top:0"><small>Quy tắc của Hair, Tabachnick và Fidell</small></p><label>Số biến quan sát trong EFA<input id="efm" type="number" min="1" value="24"></label><label>Số biến độc lập trong hồi quy<input id="rgk" type="number" min="1" value="5"></label><div id="efo"></div></div><div class="card"><h2>Cỡ mẫu theo power</h2><p class="mut" style="margin-top:0"><small>Cỡ ảnh hưởng d: 0,2 nhỏ, 0,5 vừa, 0,8 lớn. Hệ số r: 0,1 / 0,3 / 0,5</small></p><label>Kiểm định<select id="pwt"><option value="0">So sánh 2 nhóm độc lập (t-test)</option><option value="1">t-test ghép cặp hoặc một mẫu</option><option value="2">Tương quan Pearson</option></select></label><label>Cỡ ảnh hưởng (d hoặc r)<input id="pwe" type="number" step="0.01" min="0.01" value="0.5"></label><label>Mức ý nghĩa α<select id="pwa"><option>0.05</option><option>0.01</option><option>0.1</option></select></label><label>Power<select id="pwp"><option>0.8</option><option>0.9</option><option>0.95</option></select></label><div id="pwo"></div></div><div class="card"><h2>t-test từ trung bình và ĐLC</h2><p class="mut" style="margin-top:0"><small>Dùng khi không có dữ liệu thô (Welch, hai nhóm độc lập)</small></p><div class="g2" style="grid-template-columns:repeat(2,1fr);margin-top:0">${['m1:TB nhóm 1','s1:ĐLC nhóm 1','n1:n nhóm 1','m2:TB nhóm 2','s2:ĐLC nhóm 2','n2:n nhóm 2'].map(x=>`<label>${x.split(':')[1]}<input id="ts${x.split(':')[0]}" type="number" step="any"></label>`).join('')}</div><div id="tso"></div></div>`);
+const cc=()=>{
+ const m=+$('#efm').value,k=+$('#rgk').value,e=+$('#pwe').value,t=+$('#pwt').value,al=+$('#pwa').value,pw=+$('#pwp').value;
+ $('#efo').innerHTML=m>=1&&k>=1?`<div class="res"><small class="mut">EFA (${m} biến quan sát)</small><br><b>${Math.max(100,5*m)}</b> <span class="mut">tối thiểu (5 mẫu mỗi biến, không dưới 100)</span><br><span class="mut">Khuyến nghị (10 mẫu mỗi biến): <strong>${Math.max(150,10*m)}</strong></span></div><div class="res"><small class="mut">Hồi quy bội (${k} biến độc lập)</small><br><b>${Math.max(50+8*k,104+k)}</b> <span class="mut">lớn hơn của 50 + 8k và 104 + k (Tabachnick và Fidell)</span><br><span class="mut">Quy tắc 15 mẫu mỗi biến: <strong>${15*k}</strong></span></div>`:'<div class="empty">Nhập số biến hợp lệ</div>';
+ let o='';
+ if(e>0&&(t<2||e<1)){const za=zq(al),zb=zq(2*(1-pw)),zz=(za+zb)**2;
+  if(t==0){const n=Math.ceil(2*zz/e**2+za*za/4);o=`<div class="res"><small class="mut">t-test hai nhóm độc lập</small><br><b>${n}</b> <span class="mut">mỗi nhóm (tổng ${2*n})</span></div>`}
+  else if(t==1){const n=Math.ceil(zz/e**2+za*za/2);o=`<div class="res"><small class="mut">t-test ghép cặp hoặc một mẫu</small><br><b>${n}</b> <span class="mut">người</span></div>`}
+  else{const n=Math.ceil(zz/(.5*Math.log((1+e)/(1-e)))**2+3);o=`<div class="res"><small class="mut">Tương quan Pearson</small><br><b>${n}</b> <span class="mut">người</span></div>`}}
+ else o='<div class="empty">Nhập cỡ ảnh hưởng hợp lệ (r phải nhỏ hơn 1)</div>';
+ $('#pwo').innerHTML=o+'<p class="mut"><small>Công thức xấp xỉ chuẩn, kiểm định hai phía.</small></p>';
+ const v=['m1','s1','n1','m2','s2','n2'].map(x=>$('#ts'+x).value);let r='';
+ if(v.every(x=>x!=='')){const[m1,s1,n1,m2,s2,n2]=v.map(Number);
+  if(s1>0&&s2>0&&n1>1&&n2>1){const a=s1*s1/n1,b=s2*s2/n2,se=Math.sqrt(a+b),tv=(m1-m2)/se,df=(a+b)**2/(a*a/(n1-1)+b*b/(n2-1)),p=pT(tv,df),q=tq(df)*se,sp=Math.sqrt(((n1-1)*s1*s1+(n2-1)*s2*s2)/(n1+n2-2));
+   r=TB(['t','df','p','Chênh lệch TB','KTC 95%','Cohen’s d'],[[f(tv),f(df,1),pf(p),f(m1-m2),'['+f(m1-m2-q)+'; '+f(m1-m2+q)+']',f((m1-m2)/sp,2)]])+vd(p)}
+  else r='<div class="empty">ĐLC phải lớn hơn 0 và n mỗi nhóm lớn hơn 1</div>'}
+ else r='<div class="empty">Nhập đủ 6 giá trị để xem kết quả</div>';
+ $('#tso').innerHTML=r};
+$('#p-tools').addEventListener('input',cc);
+/* ===== Sự kiện bấm ===== */
+document.addEventListener('click',ev=>{
+ const el=ev.target.closest('[data-a]');if(!el)return;
+ const D=el.dataset,a=D.a,i=+D.i,j=+D.k,d=+D.d;
+ if(a=='em'){ED=!ED;rFlow()}
+ else if(a=='su'){const q=i+d;if(q<0||q>=ST.length)return;rmap((x,y)=>[x==i?q:x==q?i:x,y]);[ST[i],ST[q]]=[ST[q],ST[i]];[W[i],W[q]]=[W[q],W[i]];save();rFlow()}
+ else if(a=='iu'){const L=ST[i][1],q=j+d;if(q<0||q>=L.length)return;rmap((x,y)=>x==i?[x,y==j?q:y==q?j:y]:[x,y]);[L[j],L[q]]=[L[q],L[j]];save();rFlow()}
+ else if(a=='tab'&&D.k=='apa')apl();
+ else if(a=='an3')an3(D.k);
+ else if(a=='apadd'){if(!(AV.a||'').trim()||!(AV.t||'').trim())return toast('Cần nhập tác giả và tiêu đề');A('apa').push({k:AT,d:Object.assign({},AV)});AV={};apf();apl();save();toast('Đã thêm nguồn')}
+ else if(a=='apclr'){AV={};apf()}
+ else if(a=='apq'){const q=$('#apq').value.split('\n').map(x=>x.trim()).filter(Boolean);if(!q.length)return toast('Hãy dán ít nhất một dòng');q.forEach(l=>{const p=l.split('|').map(x=>x.trim()),u=p.find(x=>/^(https?:|www\.|doi:|10\.\d{4,})/i.test(x))||'',r=p.filter(x=>x!==u);A('apa').push({k:AT,d:{a:r[0]||'[Tác giả]',y:r.length>2?r[1]:'',t:r.length>2?r[2]:(r[1]||'[Tiêu đề]'),u}})});$('#apq').value='';apl();save();toast('Đã thêm '+q.length+' nguồn')}
+ else if(a=='apdel'){S.apa.splice(i,1);save();apl()}
+ else if(a=='apedit'){const x=S.apa.splice(i,1)[0];AT=x.k;AV=Object.assign({},x.d);save();apf();apl();scrollTo({top:0,behavior:'smooth'})}
+ else if(a=='apcp'){const x=S.apa[i];cpH(hp(x),P(ref(x)))}
+ else if(a=='apit')cp(IT(S.apa[i])[0]);
+ else if(a=='apall'){const L=A('apa').slice().sort((x,y)=>ref(x).localeCompare(ref(y),'vi'));if(!L.length)return toast('Danh sách đang trống');D.k=='h'?cpH(L.map(hp).join(''),L.map(x=>P(ref(x))).join('\n\n')):cp(L.map(x=>P(ref(x))).join('\n\n'))}
+});
+rFlow();apf();apl();cc();
+})();
+</script>
+<script>
+(()=>{try{
+const NL=String.fromCharCode(10),sm=a=>a.reduce((s,v)=>s+v,0),Zp=z=>1-gq(.5,z*z/2),pF=(F,a,b)=>ib(b/(b+a*F),b/2,a/2),
+qn=(a,p)=>{const s=[...a].sort((x,y)=>x-y),h=(s.length-1)*p,l=Math.floor(h);return s[l]+((s[l+1]===undefined?s[l]:s[l+1])-s[l])*(h-l)},
+rk=a=>{const s=a.map((v,i)=>[v,i]).sort((x,y)=>x[0]-y[0]),r=[];for(let i=0,j;i<s.length;i=j+1){j=i;while(j+1<s.length&&s[j+1][0]==s[i][0])j++;for(let q=i;q<=j;q++)r[s[q][1]]=(i+j)/2+1}return r},
+tie=r=>{const q=new Map();r.forEach(v=>q.set(v,(q.get(v)||0)+1));return sm([...q.values()].map(v=>v**3-v))};
+const an4=t=>{const c=cols(),o=$('#ao'),n=c[0]?c[0].length:0,k=c.length,em=m=>{o.innerHTML=`<div class='empty'>${m}</div>`},vn=i=>'Biến '+(i+1);let h='';
+if(n<3)return em('Cần ít nhất 3 dòng dữ liệu số hợp lệ.');
+if(t!='ol'&&k<2)return em('Phép phân tích này cần từ 2 cột trở lên.');
+if(t=='md'&&k<3)return em('Cần 3 cột: X, M (trung gian), Y.');
+if(t=='ol')h=`<h3>Phát hiện giá trị ngoại lai (IQR và |z| &gt; 3)</h3>`+TB(['Biến','Q1','Q3','Cận dưới','Cận trên','Số nghi ngờ','Dòng'],c.map((x,i)=>{const a=qn(x,.25),b=qn(x,.75),w=1.5*(b-a),m=mean(x),s=sd(x),L=[];x.forEach((v,r)=>{if(v<a-w||v>b+w||Math.abs(v-m)>3*s)L.push(r+1)});return[vn(i),f(a,2),f(b,2),f(a-w,2),f(b+w,2),L.length,L.slice(0,12).join(', ')||'–']}))+`<p class='mut'><small>Ngoại lai chưa chắc là sai. Hãy kiểm tra lại phiếu gốc và nêu cách xử lý trong báo cáo thay vì âm thầm xóa.</small></p>`;
+else if(t=='kw'){const N=n*k,r=rk(c.flat()),R=c.map((_,j)=>sm(r.slice(j*n,(j+1)*n))),H=(12/(N*(N+1))*sm(R.map(v=>v*v/n))-3*(N+1))/(1-tie(r)/(N**3-N)),p=1-gq((k-1)/2,H/2);h=`<h3>Kruskal-Wallis (mỗi cột là một nhóm, n = ${n})</h3>`+TB(['Nhóm','Hạng trung bình'],R.map((v,j)=>[vn(j),f(v/n,2)]))+TB(['H','df','p','ε²'],[[f(H),k-1,pf(p),f(H/(N-1))]])+vd(p)+`<p class='mut'><small>Dùng thay ANOVA khi dữ liệu lệch hoặc là thang thứ bậc. Nếu p &lt; 0,05, so sánh từng cặp bằng Mann-Whitney U với α chia cho số cặp.</small></p>`}
+else if(t=='ph'){const ms=c.map(mean),d2=n*k-k,mse=sm(c.map((x,j)=>sm(x.map(v=>(v-ms[j])**2))))/d2,P=k*(k-1)/2,rs=[];for(let i=0;i<k;i++)for(let j=i+1;j<k;j++){const d=ms[i]-ms[j],tv=d/Math.sqrt(2*mse/n),p=Math.min(1,pT(tv,d2)*P);rs.push([vn(i)+' – '+vn(j),f(d),f(tv),pf(p),f(d/Math.sqrt(mse),2),p<.05?`<span class='ok'>Khác biệt</span>`:'–'])}h=`<h3>Hậu nghiệm Bonferroni sau ANOVA (${P} cặp)</h3>`+TB(['Cặp','Chênh lệch TB','t','p đã hiệu chỉnh','Cohen’s d','Kết luận'],rs)+`<p class='mut'><small>Dùng MSE chung của ANOVA. Chỉ đọc khi ANOVA có p &lt; 0,05 và phương sai các nhóm tương đương (xem Levene).</small></p>`}
+else if(t=='lv'){const z=c.map(x=>{const m=md(x);return x.map(v=>Math.abs(v-m))}),zm=z.map(mean),M=mean(zm),d1=k-1,d2=n*k-k,F=(n*sm(zm.map(v=>(v-M)**2))/d1)/(sm(z.map((x,j)=>sm(x.map(v=>(v-zm[j])**2))))/d2),p=pF(F,d1,d2);h=`<h3>Kiểm định Levene (Brown-Forsythe): phương sai các nhóm có bằng nhau?</h3>`+TB(['F','df1','df2','p'],[[f(F),d1,d2,pf(p)]])+`<p class='${p<.05?'late':'ok'}'>${p<.05?'Phương sai KHÁC nhau (p &lt; 0,05): dùng Welch hoặc Kruskal-Wallis.':'Phương sai tương đương (p ≥ 0,05): có thể dùng t-test hoặc ANOVA thường.'}</p>`}
+else if(t=='wx'){const d=c[0].map((v,i)=>v-c[1][i]).filter(v=>v!==0),m=d.length;if(m<5)return em('Cần ít nhất 5 cặp có chênh lệch khác 0.');const r=rk(d.map(v=>Math.abs(v))),W=sm(r.filter((_,i)=>d[i]>0)),sg=Math.sqrt(m*(m+1)*(2*m+1)/24-tie(r)/48),z=Math.max(0,Math.abs(W-m*(m+1)/4)-.5)/sg,p=Zp(z);h=`<h3>Wilcoxon signed-rank (cột 1 so với cột 2, ${m} cặp khác 0)</h3>`+TB(['W+','Z','p','r = Z/√n'],[[f(W,1),f(z),pf(p),f(z/Math.sqrt(m),2)]])+vd(p)+`<p class='mut'><small>Thay t-test ghép cặp khi chênh lệch không phân phối chuẩn.</small></p>`}
+else{const[x,m,y]=c,a1=pr(x,m),a2=pr(x,y),a3=pr(m,y),D=1-a1*a1,a=a1*sd(m)/sd(x),sa=Math.sqrt(vr(m)*D/((n-2)*vr(x))),R2=(a2*a2+a3*a3-2*a1*a2*a3)/D,mse=(n-1)*vr(y)*(1-R2)/(n-3),b=(a3-a2*a1)/D*sd(y)/sd(m),sb=Math.sqrt(mse/((n-1)*vr(m)*D)),cd=(a2-a3*a1)/D*sd(y)/sd(x),scd=Math.sqrt(mse/((n-1)*vr(x)*D)),ab=a*b,se=Math.sqrt(b*b*sa*sa+a*a*sb*sb),z=ab/se,p=Zp(z),R=(l,v,s,df)=>[l,f(v),f(s),f(v/s),pf(pT(v/s,df))];h=`<h3>Biến trung gian, kiểm định Sobel (X = cột 1, M = cột 2, Y = cột 3, n = ${n})</h3>`+TB(['Đường','Hệ số','SE','t / z','p'],[R('a: X → M',a,sa,n-2),R('b: M → Y (kiểm soát X)',b,sb,n-3),R('c’: X → Y trực tiếp',cd,scd,n-3),['c: X → Y tổng',f(a2*sd(y)/sd(x)),'','',''],['a×b: gián tiếp',f(ab),f(se),f(z),pf(p)]])+`<p>KTC 95% của a×b: [${f(ab-1.96*se)}; ${f(ab+1.96*se)}]</p>`+vd(p)+`<p class='mut'><small>Sobel giả định a×b phân phối chuẩn nên cần mẫu đủ lớn. Với luận văn nên bổ sung bootstrap (PROCESS hoặc AMOS) nếu có điều kiện.</small></p>`}
+o.innerHTML=h};
+const rows=()=>$('#dt').value.split(NL).map(l=>l.trim()).filter(Boolean).map(l=>l.split(/[^0-9.eE+-]+/).map(Number)),wr=R=>{$('#dt').value=R.map(r=>r.join(' ')).join(NL)},cl=()=>$('#rvc').value.split(/[^0-9]+/).map(Number).filter(v=>v>0);
+$('#p-stat .row').insertAdjacentHTML('beforeend',[['ph','Hậu nghiệm Bonferroni'],['lv','Levene'],['kw','Kruskal-Wallis'],['wx','Wilcoxon'],['md','Trung gian (Sobel)'],['ol','Ngoại lai']].map(x=>`<button class='btn' data-a='an4' data-k='${x[0]}'>${x[1]}</button>`).join(''));
+$('#mu0').parentElement.insertAdjacentHTML('afterend',`<div class='row' style='margin-top:12px;align-items:flex-end'><label style='max-width:200px;margin:0'>Cột cần đảo mã (vd 2,4)<input id='rvc' placeholder='2,4'></label><label style='max-width:170px;margin:0'>Điểm tối đa (thấp nhất = 1)<input id='rvm' type='number' value='5' min='2'></label><button class='gh' data-a='rv'>Đảo mã cột</button><button class='gh' data-a='cmp'>Thêm cột điểm TB</button></div>`);
+const SM=[['Ngẫu nhiên đơn giản','Có danh sách đầy đủ, ai cũng có cơ hội như nhau. Dùng công cụ Chọn mẫu ngẫu nhiên ở tab Tiện ích.'],['Hệ thống','Lấy mỗi phần tử thứ k từ điểm bắt đầu ngẫu nhiên. Nhanh, nhưng tránh danh sách có tính chu kỳ.'],['Phân tầng','Chia tổng thể theo khoa, năm học hoặc giới rồi lấy theo tỉ lệ từng tầng. Đại diện tốt khi các nhóm khác nhau rõ.'],['Chùm (cụm)','Chọn ngẫu nhiên lớp hoặc trường rồi khảo sát cả cụm. Tiết kiệm nhưng sai số thường lớn hơn.'],['Thuận tiện','Ai dễ tiếp cận thì khảo sát. Nhanh nhưng thiên lệch, chỉ nên dùng khi khám phá và phải nêu rõ hạn chế.'],['Quả cầu tuyết','Người tham gia giới thiệu người tiếp theo. Phù hợp nhóm khó tiếp cận.'],['Có chủ đích (định tính)','Chọn người giàu thông tin nhất, dừng khi dữ liệu bão hòa.']];
+$('#p-tools .g').insertAdjacentHTML('beforeend',`<div class='card'><h2>Cỡ mẫu ước lượng trung bình</h2><p class='mut' style='margin-top:0'><small>Kèm Krejcie-Morgan và bù tỉ lệ phản hồi</small></p><label>Độ lệch chuẩn ước tính σ<input id='xs' type='number' step='any' value='0.8'></label><label>Sai số cho phép E (cùng đơn vị với σ)<input id='xe' type='number' step='any' value='0.1'></label><label>Độ tin cậy<select id='xz'><option value='1.645'>90%</option><option value='1.96' selected>95%</option><option value='2.576'>99%</option></select></label><label>Quy mô tổng thể N (nếu biết)<input id='xN' type='number' min='0'></label><label>Tỉ lệ phản hồi dự kiến (%)<input id='xr' type='number' min='1' max='100' value='80'></label><div id='xo'></div></div><div class='card'><h2>Phân bổ mẫu theo tầng</h2><p class='mut' style='margin-top:0'><small>Chia mẫu tỉ lệ theo quy mô từng tầng</small></p><label>Các tầng (Tên:số lượng, cách nhau dấu phẩy)<input id='sta' value='Năm 1:300, Năm 2:250, Năm 3:200'></label><label>Cỡ mẫu tổng n<input id='stn' type='number' min='1' value='150'></label><div id='sto'></div></div><div class='card'><h2>Chọn mẫu hệ thống</h2><p class='mut' style='margin-top:0'><small>Lấy mỗi phần tử thứ k từ điểm bắt đầu ngẫu nhiên</small></p><label>Tổng thể N<input id='syN' type='number' min='1' placeholder='600'></label><label>Cỡ mẫu n<input id='syn' type='number' min='1' placeholder='60'></label><button class='btn' data-a='sys'>Chọn mẫu</button><div id='syo'></div></div><div class='card'><h2>Đổi cỡ ảnh hưởng</h2><p class='mut' style='margin-top:0'><small>Chuyển giữa d, r và η²</small></p><label>Cohen’s d<input id='esd' type='number' step='any' value='0.5'></label><label>Hệ số r (0 đến 1)<input id='esr' type='number' step='any' value='0.3'></label><div id='eso'></div></div><div class='card'><h2>Trợ lý giả thuyết</h2><p class='mut' style='margin-top:0'><small>Sinh câu hỏi, mục tiêu, H0 và H1 từ biến của bạn</small></p><label>Biến độc lập<input id='hx' placeholder='Thời gian dùng mạng xã hội'></label><label>Biến phụ thuộc<input id='hy' placeholder='Kết quả học tập'></label><label>Đối tượng<input id='hs' placeholder='sinh viên năm 2'></label><textarea id='hyo' readonly rows='7'></textarea><div class='row' style='margin-top:12px'><button class='btn' data-a='hcp'>Sao chép</button></div></div><div class='card'><h2>Các cách chọn mẫu</h2>${SM.map(x=>`<details><summary>${x[0]}</summary><p>${x[1]}</p></details>`).join('')}</div>`);
+const ct=()=>{const sg=+$('#xs').value,e=+$('#xe').value,z=+$('#xz').value,N=+$('#xN').value,r=(+$('#xr').value||100)/100;let h='';
+if(sg>0&&e>0){let n=(z*sg/e)**2;if(N>0)n=n/(1+(n-1)/N);h+=`<div class='res'><small class='mut'>Ước lượng trung bình (σ = ${sg}, sai số ±${e})</small><br><b>${Math.ceil(n)}</b> <span class='mut'>người, nên phát khoảng <strong>${Math.ceil(n/r)}</strong> phiếu</span></div>`}else h+=`<div class='empty'>Nhập σ và E lớn hơn 0</div>`;
+if(N>0){const k2=3.841*N*.25/(.0025*(N-1)+3.841*.25);h+=`<div class='res'><small class='mut'>Krejcie-Morgan (N = ${N}, tin cậy 95%, sai số 5%)</small><br><b>${Math.ceil(k2)}</b> <span class='mut'>người, nên phát khoảng <strong>${Math.ceil(k2/r)}</strong> phiếu</span></div>`}
+$('#xo').innerHTML=h;
+const st=$('#sta').value.split(',').map(x=>x.split(':')).filter(x=>x.length==2&&+x[1]>0).map(x=>[x[0].trim(),+x[1]]),n2=+$('#stn').value,T=sm(st.map(x=>x[1]));
+$('#sto').innerHTML=st.length&&n2>0?TB(['Tầng','N','Tỉ lệ','Cỡ mẫu'],st.map(x=>[esc(x[0]),x[1],f(x[1]/T*100,1)+'%',Math.round(n2*x[1]/T)]))+`<p class='mut'><small>Tổng sau làm tròn có thể lệch 1 đến 2 người, hãy điều chỉnh tay.</small></p>`:`<div class='empty'>Nhập các tầng theo dạng Tên:số lượng và cỡ mẫu tổng</div>`;
+const d=+$('#esd').value,q=+$('#esr').value;
+$('#eso').innerHTML=`<div class='res'>${d?`d = ${f(d,2)} → r ≈ <b style='font-size:1.2rem'>${f(d/Math.sqrt(d*d+4),2)}</b>, η² ≈ ${f(d*d/(d*d+4),3)}`:'Nhập d'}<br>${q>0&&q<1?`r = ${f(q,2)} → d ≈ <b style='font-size:1.2rem'>${f(2*q/Math.sqrt(1-q*q),2)}</b>`:'Nhập 0 &lt; r &lt; 1'}</div>`;
+const x=$('#hx').value.trim()||'[biến độc lập]',y=$('#hy').value.trim()||'[biến phụ thuộc]',s=$('#hs').value.trim()||'[đối tượng]';
+$('#hyo').value=['Câu hỏi nghiên cứu: '+x+' có ảnh hưởng đến '+y+' của '+s+' hay không, và ở mức độ nào?','Mục tiêu: Xác định và đo lường mức độ ảnh hưởng của '+x+' đến '+y+' của '+s+'.','H0: Không có mối quan hệ có ý nghĩa thống kê giữa '+x+' và '+y+' (β = 0).','H1: '+x+' có ảnh hưởng có ý nghĩa thống kê đến '+y+' (β ≠ 0). Nếu có cơ sở lý thuyết, nêu rõ chiều tác động (+) hoặc (−).','Gợi ý kiểm định: Pearson (2 biến số), hồi quy (nhiều yếu tố), t-test hoặc ANOVA (so sánh nhóm), Chi-bình phương (biến phân loại).'].join(NL)};
+document.addEventListener('click',ev=>{const el=ev.target.closest('[data-a]');if(!el)return;const D=el.dataset,a=D.a;
+if(a=='an4')an4(D.k);
+else if(a=='rv'){const L=cl(),mx=+$('#rvm').value||5;if(!L.length)return toast('Nhập số cột cần đảo, ví dụ 2,4');wr(rows().map(r=>r.map((v,j)=>L.includes(j+1)?mx+1-v:v)));toast('Đã đảo mã cột '+L.join(', '))}
+else if(a=='cmp'){const L=cl();wr(rows().map(r=>{const s=(L.length?L:r.map((_,j)=>j+1)).map(j=>r[j-1]);return r.concat(+(sm(s)/s.length).toFixed(3))}));toast('Đã thêm cột điểm trung bình ở cuối')}
+else if(a=='sys'){const N=+$('#syN').value,n=+$('#syn').value;if(!(N>=1&&n>=1&&n<=N)){$('#syo').innerHTML=`<div class='empty'>Cần 1 ≤ n ≤ N</div>`;return}const k=Math.floor(N/n),s=1+Math.floor(Math.random()*k),l=[];for(let v=s;v<=N&&l.length<n;v+=k)l.push(v);$('#syo').innerHTML=`<div class='res'><small class='mut'>Khoảng cách k = ⌊N/n⌋ = ${k}, điểm bắt đầu ngẫu nhiên = ${s}</small><p style='margin:6px 0 0'>${l.join(', ')}</p></div>`}
+else if(a=='hcp')cp($('#hyo').value)});
+$('#p-tools').addEventListener('input',ct);ct();
+}catch(e){console.error('NCKH add-on',e)}})();
+</script>
+<script>
+(()=>{try{
+const NL=String.fromCharCode(10),sm=a=>a.reduce((s,v)=>s+v,0),Phi=z=>.5*(1+(z<0?-1:1)*gq(.5,z*z/2));
+const ptk=(q,k,v)=>{if(q<=0)return 0;
+const W=w=>{const N=60,h=14/N;let s=0;for(let i=0;i<=N;i++){const z=-7+i*h;s+=Math.exp(-z*z/2)/2.5066282746*Math.pow(Math.max(Phi(z)-Phi(z-w),0),k-1)*(i==0||i==N?1:i%2?4:2)}return k*s*h/3};
+const lo=Math.max(0,1-8/Math.sqrt(2*v)),hi=1+8/Math.sqrt(2*v),M=100,h=(hi-lo)/M,lc=Math.log(2)+v/2*Math.log(v/2)-lg(v/2);let s=0;
+for(let i=0;i<=M;i++){const x=lo+i*h;if(x<=0)continue;s+=Math.exp(lc+(v-1)*Math.log(x)-v*x*x/2)*W(q*x)*(i==0||i==M?1:i%2?4:2)}
+return Math.min(1,s*h/3)};
+const eig=A=>{const n=A.length,V=A.map((_,i)=>A.map((_,j)=>+(i==j))),M=A.map(r=>r.slice());
+for(let it=0;it<5000;it++){let p=0,q=1,mx=0;for(let i=0;i<n;i++)for(let j=i+1;j<n;j++)if(Math.abs(M[i][j])>mx){mx=Math.abs(M[i][j]);p=i;q=j}
+if(mx<1e-12)break;
+const th=(M[q][q]-M[p][p])/(2*M[p][q]),t=Math.sign(th||1)/(Math.abs(th)+Math.sqrt(th*th+1)),c=1/Math.sqrt(t*t+1),s=t*c;
+for(let k=0;k<n;k++){const a=M[k][p],b=M[k][q];M[k][p]=c*a-s*b;M[k][q]=s*a+c*b}
+for(let k=0;k<n;k++){const a=M[p][k],b=M[q][k];M[p][k]=c*a-s*b;M[q][k]=s*a+c*b}
+for(let k=0;k<n;k++){const a=V[k][p],b=V[k][q];V[k][p]=c*a-s*b;V[k][q]=s*a+c*b}}
+return{l:M.map((r,i)=>r[i]),V}};
+const vmx=L=>{const k=L.length,m=L[0].length,h=L.map(r=>Math.sqrt(sm(r.map(v=>v*v)))||1),A=L.map((r,i)=>r.map(v=>v/h[i]));
+for(let it=0;it<100;it++){let ch=0;for(let p=0;p<m;p++)for(let q=p+1;q<m;q++){
+const u=A.map(r=>r[p]**2-r[q]**2),v=A.map(r=>2*r[p]*r[q]),a=sm(u),b=sm(v),c=sm(u.map((x,i)=>x*x-v[i]*v[i])),d=2*sm(u.map((x,i)=>x*v[i])),
+ph=Math.atan2(d-2*a*b/k,c-(a*a-b*b)/k)/4,cs=Math.cos(ph),sn=Math.sin(ph);ch=Math.max(ch,Math.abs(ph));
+A.forEach(r=>{const x=r[p],y=r[q];r[p]=x*cs+y*sn;r[q]=-x*sn+y*cs})}
+if(ch<1e-6)break}
+return A.map((r,i)=>r.map(v=>v*h[i]))};
+const ab=(x,m,y)=>{const n=x.length,A=mean(x),B=mean(m),C=mean(y);let xx=0,mm=0,xm=0,xy=0,my=0;
+for(let i=0;i<n;i++){const p=x[i]-A,q=m[i]-B,r=y[i]-C;xx+=p*p;mm+=q*q;xm+=p*q;xy+=p*r;my+=q*r}
+const D=mm*xx-xm*xm;return[xm/xx,(my*xx-xy*xm)/D,(xy*mm-my*xm)/D]};
+const an5=t=>{const c=cols(),o=$('#ao'),n=c[0]?c[0].length:0,k=c.length,em=m=>{o.innerHTML=`<div class='empty'>${m}</div>`},vn=i=>'Biến '+(i+1);let h='';
+if(n<3||k<2)return em('Cần ít nhất 3 dòng và 2 cột dữ liệu số hợp lệ.');
+if((t=='bt'&&k<3)||(t=='ef'&&(k<3||n<=k)))return em(t=='bt'?'Cần 3 cột: X, M (trung gian), Y.':'EFA cần ít nhất 3 cột và số dòng lớn hơn số cột.');
+if(t=='tk'){const ms=c.map(mean),v=n*k-k,mse=sm(c.map((x,j)=>sm(x.map(z=>(z-ms[j])**2))))/v,P=[];
+for(let i=0;i<k;i++)for(let j=i+1;j<k;j++){const d=ms[i]-ms[j],q=Math.abs(d)/Math.sqrt(mse/n),p=Math.max(0,1-ptk(q,k,v));P.push([vn(i)+' – '+vn(j),f(d),f(q),pf(p),f(d/Math.sqrt(mse),2),p<.05?`<span class='ok'>Khác biệt</span>`:'–'])}
+h=`<h3>Hậu nghiệm Tukey HSD (mỗi cột là một nhóm, n = ${n}, df lỗi = ${v})</h3>`+TB(['Cặp','Chênh lệch TB','q','p','Cohen’s d','Kết luận'],P)+`<p class='mut'><small>Dựa trên phân phối khoảng Student hóa (studentized range), chuẩn hơn Bonferroni khi so sánh nhiều cặp. Chỉ đọc khi ANOVA có p &lt; 0,05 và phương sai các nhóm tương đương (xem Levene).</small></p>`}
+else if(t=='bt'){const[x,m,y]=c,B=5000,r=ab(x,m,y),I=[],Dd=[];
+for(let q=0;q<B;q++){const ix=Array.from({length:n},()=>Math.floor(Math.random()*n)),z=ab(ix.map(i=>x[i]),ix.map(i=>m[i]),ix.map(i=>y[i]));I.push(z[0]*z[1]);Dd.push(z[2])}
+const ci=a=>{const s=a.slice().sort((p,q)=>p-q);return[s[Math.floor(.025*B)],s[Math.floor(.975*B)-1]]},cI=ci(I),cD=ci(Dd),sI=cI[0]>0||cI[1]<0,sD=cD[0]>0||cD[1]<0,row=(l,v,s,c2,sg)=>[l,f(v),f(sd(s)),`[${f(c2[0])}; ${f(c2[1])}]`,sg?`<span class='ok'>Có ý nghĩa</span>`:'Không'];
+h=`<h3>Bootstrap cho biến trung gian (X = cột 1, M = cột 2, Y = cột 3, ${B} lần lấy mẫu lại)</h3>`+TB(['Hiệu ứng','Ước lượng','SE bootstrap','KTC 95% (percentile)','Kết luận'],[row('a×b: gián tiếp',r[0]*r[1],I,cI,sI),row('c’: trực tiếp',r[2],Dd,cD,sD)])+`<p class='${sI?'ok':'late'}'>${sI?(sD?'Trung gian một phần: có cả hiệu ứng gián tiếp và trực tiếp.':'Trung gian hoàn toàn: chỉ còn hiệu ứng gián tiếp.'):'Không có bằng chứng về hiệu ứng trung gian (KTC chứa 0).'}</p><p class='mut'><small>Hiệu ứng gián tiếp có ý nghĩa khi KTC 95% không chứa 0. Bootstrap không giả định a×b phân phối chuẩn nên đáng tin hơn Sobel. Mỗi lần bấm kết quả lệch nhẹ do lấy mẫu ngẫu nhiên.</small></p>`}
+else{const R=c.map(x=>c.map(y=>x===y?1:pr(x,y))),E=eig(R),ix=E.l.map((_,i)=>i).sort((a,b)=>E.l[b]-E.l[a]),ev=ix.map(i=>E.l[i]);
+if(ev[k-1]<1e-8)return em('Ma trận tương quan suy biến (có biến trùng lặp hoặc phụ thuộc tuyến tính). Hãy loại bớt biến.');
+const Ri=R.map((_,i)=>R.map((_,j)=>sm(ev.map((e,q)=>E.V[i][ix[q]]*E.V[j][ix[q]]/e)))),ms=[];let rs=0,qs=0;
+for(let i=0;i<k;i++){let a=0,b=0;for(let j=0;j<k;j++)if(i!=j){const q=-Ri[i][j]/Math.sqrt(Ri[i][i]*Ri[j][j]);a+=R[i][j]**2;b+=q*q}ms.push(a/(a+b));rs+=a;qs+=b}
+const kmo=rs/(rs+qs),chi=-(n-1-(2*k+5)/6)*sm(ev.map(e=>Math.log(e))),df=k*(k-1)/2,pb=1-gq(df/2,chi/2),m=Math.min(k,Math.max(1,Math.round(+$('#efn').value)||ev.filter(e=>e>1).length)),
+L=R.map((_,i)=>Array.from({length:m},(_,j)=>E.V[i][ix[j]]*Math.sqrt(ev[j]))),Q=m>1?vmx(L):L,ss=j=>sm(Q.map(r=>r[j]**2)),od=Array.from({length:m},(_,j)=>j).sort((a,b)=>ss(b)-ss(a)),F=Q.map(r=>od.map(j=>r[j]));
+od.forEach((_,j)=>{if(sm(F.map(r=>r[j]))<0)F.forEach(r=>{r[j]=-r[j]})});
+const lab=kmo>=.9?'Tuyệt vời':kmo>=.8?'Tốt':kmo>=.7?'Khá':kmo>=.6?'Tạm được':kmo>=.5?'Kém':'Không chấp nhận được';
+h=`<h3>EFA: PCA + Varimax (${k} biến, n = ${n}, giữ ${m} nhân tố)</h3><div class='res'>KMO = <b>${f(kmo)}</b> <span class='${kmo>=.5?'ok':'late'}'>${lab}</span><br>Bartlett: χ² = ${f(chi,1)}, df = ${df}, p ${pb<.001?'&lt; 0,001':'= '+f(pb)} <span class='${pb<.05?'ok':'late'}'>${pb<.05?'Phù hợp phân tích nhân tố':'Chưa phù hợp'}</span><br>Tổng phương sai giải thích: <b>${f(sm(ev.slice(0,m))/k*100,1)}%</b></div>`
++TB(['Thành phần','Eigenvalue','% phương sai','% tích lũy'],ev.slice(0,Math.min(k,10)).map((e,i)=>[(i+1)+(i<m?' ✓':''),f(e),f(e/k*100,1),f(sm(ev.slice(0,i+1))/k*100,1)]))
++TB(['Biến','MSA'].concat(od.map((_,j)=>'Nhân tố '+(j+1)),['Communality']),F.map((r,i)=>[vn(i),f(ms[i],2)].concat(r.map(v=>Math.abs(v)>=.5?`<b>${f(v,2)}</b>`:Math.abs(v)>=.3?f(v,2):`<span style='opacity:.4'>${f(v,2)}</span>`),[f(sm(r.map(v=>v*v)),2)+(r.filter(v=>Math.abs(v)>=.3).length>1?' ⚠':'')])).concat([['% phương sai (sau xoay)',''].concat(od.map(j=>f(ss(j)/k*100,1)+'%'),[''])]))
++`<p class='mut'><small>Chuẩn thường dùng: KMO ≥ 0,5; Bartlett p &lt; 0,05; tổng phương sai ≥ 50%; hệ số tải ≥ 0,5 (in đậm); communality ≥ 0,5; MSA từng biến ≥ 0,5. ⚠ là biến tải chéo (tải ≥ 0,3 trên từ 2 nhân tố), nên cân nhắc loại. Số nhân tố mặc định theo Kaiser (eigenvalue &gt; 1), có thể nhập số khác ở ô Số nhân tố EFA. Trích bằng Principal Components, xoay Varimax có chuẩn hóa Kaiser.${n<Math.max(100,5*k)?' Cỡ mẫu hiện nhỏ hơn mức khuyến nghị (từ 100 và từ 5 mẫu mỗi biến).':''}</small></p>`}
+o.innerHTML=h};
+$('#p-stat .row').insertAdjacentHTML('beforeend',[['tk','Tukey HSD'],['bt','Trung gian (Bootstrap)'],['ef','EFA (PCA + Varimax)']].map(x=>`<button class='btn' data-a='an5' data-k='${x[0]}'>${x[1]}</button>`).join(''));
+$('#rvc').closest('.row').insertAdjacentHTML('beforeend',`<label style='max-width:170px;margin:0'>Số nhân tố EFA<input id='efn' type='number' min='1' placeholder='tự động'></label>`);
+const cs=s=>s.replace(/<svg[\s\S]*?<\/svg>/g,'').replace(/ class=("[^"]*"|'[^']*')/g,'').replace(/<table/g,"<table style='border-collapse:collapse;width:100%;margin:6px 0;font-size:11pt'").replace(/<th/g,"<th style='border:1px solid #000;padding:3px 6px;background:#eee;color:#000;text-align:right'").replace(/<td/g,"<td style='border:1px solid #000;padding:3px 6px;color:#000;text-align:right'");
+const rh=()=>{const[d,tot,p]=prog(),dt=x=>x.split('-').reverse().join('/'),tx=e=>e.replace(/<[^>]+>/g,''),
+rf=$$('#apl .it p').map(e=>e.innerHTML).concat(S.refs.map(r=>esc(fmt(r)))).sort((a,b)=>tx(a).localeCompare(tx(b),'vi')).map(r=>`<p style='margin:0 0 6pt 36pt;text-indent:-36pt'>${r}</p>`).join('')||'<p>(chưa có)</p>';
+return `<h1 style='text-align:center;font-size:15pt;margin:0 0 6pt'>BÁO CÁO NGHIÊN CỨU KHOA HỌC</h1><p style='text-align:center'><b>Đề tài:</b> ${esc(S.title||'(chưa đặt tên)')}<br><b>Hạn nộp:</b> ${S.dl?dt(S.dl):'(chưa đặt)'} &nbsp; <b>Tiến độ:</b> ${p}% (${d}/${tot} đầu việc)</p><h2 style='font-size:13pt'>I. Tiến độ theo bước</h2><ul>${ST.map((s,i)=>`<li>${esc(s[0])}: ${s[1].filter((_,j)=>S.done[i+'-'+j]).length}/${s[1].length}</li>`).join('')}</ul><h2 style='font-size:13pt'>II. Công việc</h2><ul>${STN.map((n,k)=>`<li><b>${n}:</b> ${esc(S.tasks.filter(t=>t.s==k).map(t=>t.n).join('; ')||'không có')}</li>`).join('')}</ul><h2 style='font-size:13pt'>III. Kết quả phân tích</h2>${S.saved.length?S.saved.map((t,i)=>S.savedH&&S.savedH[i]?cs(S.savedH[i]):`<pre style='font:10pt monospace;white-space:pre-wrap'>${esc(t)}</pre>`).join(''):'<p>(chưa lưu kết quả)</p>'}<h2 style='font-size:13pt'>IV. Tài liệu tham khảo</h2>${rf}<h2 style='font-size:13pt'>V. Nhật ký nghiên cứu</h2>${S.notes.length?S.notes.map(n=>`<p><i>${esc(n.at)}</i><br>${esc(n.t).replace(/\n/g,'<br>')}</p>`).join(''):'<p>(chưa có)</p>'}`};
+const cph=h=>{try{const d=document.createElement('div');d.innerHTML=h;d.style.cssText="position:fixed;left:-9999px;top:0;background:#fff;color:#000;font:12pt 'Times New Roman',serif";document.body.appendChild(d);const r=document.createRange();r.selectNodeContents(d);const s=getSelection();s.removeAllRanges();s.addRange(r);const ok=document.execCommand('copy');s.removeAllRanges();d.remove();toast(ok?'Đã sao chép. Dán vào Word hoặc Google Docs':'Không sao chép được')}catch(e){toast('Không sao chép được')}};
+const dl=()=>{try{const b=new Blob([`<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word'><head><meta charset='utf-8'><style>@page{size:21cm 29.7cm;margin:2cm 2cm 2cm 3cm}body{font:13pt 'Times New Roman',serif;line-height:1.5}</style></head><body>${rh()}</body></html>`],{type:'application/msword'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='bao-cao-nckh.doc';document.body.appendChild(a);a.click();a.remove();toast('Đã gửi lệnh tải. Nếu không thấy file, hãy dùng nút Sao chép cho Word')}catch(e){toast('Trình duyệt chặn tải xuống, hãy dùng Sao chép cho Word')}};
+const pv=()=>{let o=$('#rpv');if(!o){o=document.createElement('div');o.id='rpv';document.body.appendChild(o)}
+o.style.cssText='position:fixed;inset:0;z-index:50;overflow:auto;background:#fff;color:#000';
+o.innerHTML=`<div class='np' style='position:sticky;top:0;display:flex;gap:8px;flex-wrap:wrap;padding:10px;background:#0f1b3d'><button class='btn' data-a='rpp'>In / Lưu PDF</button><button class='gh' data-a='rpc'>Sao chép cho Word</button><button class='gh' data-a='rpx'>Đóng</button></div><div style="max-width:800px;margin:0 auto;padding:24px;font:13pt 'Times New Roman',serif;line-height:1.5;color:#000">${rh()}</div>`};
+document.head.insertAdjacentHTML('beforeend',`<style>@media print{body>*:not(#rpv){display:none!important}#rpv{position:static!important;overflow:visible!important}.np{display:none!important}}</style>`);
+$('#p-rep .row').insertAdjacentHTML('beforeend',`<button class='btn' data-a='rpv'>Xem trước và in PDF</button><button class='gh' data-a='rpc'>Sao chép cho Word</button><button class='gh' data-a='rpd'>Tải .doc (thử)</button>`);
+document.addEventListener('click',ev=>{const el=ev.target.closest('[data-a]');if(!el)return;const D=el.dataset,a=D.a;
+if(a=='an5')an5(D.k);
+else if(a=='rpv')pv();
+else if(a=='rpp'){try{print()}catch(e){}toast('Nếu không thấy hộp thoại in, hãy Sao chép cho Word rồi tải PDF từ Word hoặc Google Docs')}
+else if(a=='rpc')cph(rh());
+else if(a=='rpx'){const o=$('#rpv');if(o)o.remove()}
+else if(a=='rpd')dl();
+else if(a=='saveRes'){const H=S.savedH=S.savedH||[];if(S.saved.length>H.length){while(H.length<S.saved.length-1)H.push('');H.push($('#ao').innerHTML);save()}}
+else if(a=='clrRes'){S.savedH=[];save()}});
+}catch(e){console.error('NCKH add-on 2',e)}})();
+</script>
+<!-- NCKH Studio: khối mã bổ sung số 4 (sơ đồ quy trình, đạo đức học thuật, phản biện, xuất .ics + nhắc việc, đồng bộ công việc, dấu ?). Dán nguyên khối này ngay trước thẻ đóng body, sau khối script cuối cùng. Không cần sửa dòng cũ nào. -->
+<style>
+.hq{display:inline-grid;place-items:center;width:18px;height:18px;margin-left:6px;border-radius:50%;background:var(--bd);color:var(--mut);font-size:.72rem;font-weight:700;line-height:1;cursor:pointer;vertical-align:middle;user-select:none}
+.hq:hover,.hq:focus-visible{background:var(--a);color:#fff;outline:none}
+#hqb{position:fixed;z-index:30;max-width:min(280px,86vw);padding:10px 12px;border-radius:12px;background:var(--tx);color:var(--bg);font-size:.82rem;line-height:1.45;box-shadow:var(--sh)}
+.fn{cursor:pointer}.fn .bx{fill:var(--inp);stroke:var(--bd);stroke-width:1.5;transition:.2s}.fn:hover .bx{stroke:var(--a)}.fn circle{fill:var(--bd)}.fn text{fill:var(--tx);font-size:13px;font-weight:600}.fn .nn{font-weight:800}.fn .pc{fill:var(--mut);font-size:11px;font-weight:400}.fn .pb{fill:var(--bd)}.fn .pf{fill:var(--a)}
+.fn.dn .bx{fill:rgba(15,168,154,.14);stroke:var(--a)}.fn.dn circle{fill:var(--a)}.fn.dn .nn{fill:#fff}.fn.cur .bx{stroke:var(--b);stroke-width:2.5}.fn.sel .bx{stroke:var(--c);stroke-width:3}
+.pr{display:grid;grid-template-columns:1fr 124px;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--bd);font-size:.92rem}.pr select{margin:0}
+</style>
+<script>
+(()=>{try{
+const NL=String.fromCharCode(10),sm=a=>a.reduce((s,v)=>s+v,0),dm=x=>x.split('-').reverse().join('/');
+const Q=t=>`<span class="hq" role="button" tabindex="0" aria-label="Giải thích" data-h="${esc(t)}">?</span>`;
+const tk=()=>S.tasks.forEach(t=>{if(!t.id)t.id=uid()});tk();
+
+/* ===== Dấu ? giải thích ===== */
+let bub=0;const hide=()=>{if(bub){bub.remove();bub=0}};
+document.addEventListener('click',e=>{const q=e.target.closest('.hq'),same=bub&&bub._q===q;hide();if(!q||same)return;
+ bub=document.createElement('div');bub.id='hqb';bub._q=q;bub.textContent=q.dataset.h;document.body.appendChild(bub);
+ const r=q.getBoundingClientRect(),w=bub.offsetWidth,h=bub.offsetHeight;bub.style.left=Math.max(8,Math.min(innerWidth-w-8,r.left+r.width/2-w/2))+'px';
+ bub.style.top=(r.bottom+8+h>innerHeight-8?Math.max(8,r.top-h-8):r.bottom+8)+'px'});
+addEventListener('scroll',hide,{passive:true});
+document.addEventListener('keydown',e=>{if(e.key!='Enter'&&e.key!=' ')return;const t=e.target;if((t.classList&&t.classList.contains('hq'))||(t.dataset&&t.dataset.a=='fnode')){e.preventDefault();t.dispatchEvent(new MouseEvent('click',{bubbles:true}))}});
+
+/* ===== Thẻ tab và khung mới ===== */
+$('#nav [data-k="rep"]').insertAdjacentHTML('beforebegin','<button data-a="tab" data-k="eth">🛡️ Đạo đức</button><button data-a="tab" data-k="pr">🔍 Phản biện</button>');
+$('#p-notes').insertAdjacentHTML('afterend',`
+<section class="panel" id="p-eth">
+ <div class="card"><h2>Đạo đức học thuật${Q('Hội đồng thường hỏi về trích dẫn, sự đồng ý của người tham gia và bảo mật dữ liệu. Tick đủ các mục dưới đây trước khi nộp.')}</h2><p class="mut" style="margin-top:0"><small>Tiến độ được lưu trên máy bạn.</small></p><div id="ehp"></div></div>
+ <div id="ehl"></div>
+ <div class="g">
+  <div class="card"><h2>Mẫu thư mời và phiếu đồng ý${Q('Gửi cho người tham gia trước khi khảo sát. Thư cần nói rõ mục đích, việc tham gia là tự nguyện, cách bảo mật và cách liên hệ.')}</h2>
+   <label>Đơn vị, trường<input id="eun" placeholder="Khoa Kinh tế, Trường ..."></label>
+   <label>Liên hệ của nhóm<input id="ect" placeholder="Email hoặc Zalo"></label>
+   <label>Thời gian trả lời (phút)<input id="emn" type="number" min="1" value="10"></label>
+   <textarea id="eto" rows="12" readonly></textarea>
+   <div class="row" style="margin-top:12px"><button class="btn" data-a="ecp">Sao chép thư</button></div></div>
+  <div class="card"><h2>Tạo mã ẩn danh${Q('Thay tên thật bằng mã (P001, P002...) trong file dữ liệu. Mã được xáo ngẫu nhiên nên không lộ thứ tự. Bảng mã phải cất riêng, tách khỏi file dữ liệu.')}</h2>
+   <label>Mỗi dòng một tên hoặc một định danh<textarea id="ean" placeholder="Nguyễn Văn A&#10;Trần Thị B"></textarea></label>
+   <button class="btn" data-a="ean">Tạo mã</button>
+   <textarea id="eao" rows="6" readonly style="margin-top:10px"></textarea>
+   <div class="row" style="margin-top:10px"><button class="gh" data-a="eac">Sao chép bảng mã</button></div></div>
+ </div>
+</section>
+<section class="panel" id="p-pr">
+ <div class="card"><h2>Phản biện bài của bạn khác${Q('Mỗi người mở tab này khi đọc bài của bạn mình, chấm từng tiêu chí rồi sao chép phiếu gửi lại. Góp ý nêu rõ trang hoặc mục và có cách sửa thì hữu ích hơn nhận xét chung chung.')}</h2>
+  <div class="g2" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr))"><label>Người phản biện<input data-pf="w"></label><label>Bài được phản biện<input data-pf="d"></label></div></div>
+ <div id="prl"></div>
+ <div class="card" style="margin-top:12px"><div id="prs" style="margin-bottom:10px"></div>
+  <label>Điểm mạnh<textarea data-pf="a" style="min-height:60px"></textarea></label>
+  <label>Điểm cần sửa (nêu rõ trang hoặc mục)<textarea data-pf="b" style="min-height:60px"></textarea></label>
+  <label>Đề xuất cụ thể<textarea data-pf="c" style="min-height:60px"></textarea></label>
+  <div class="row"><button class="btn" data-a="rvq">Sao chép phiếu</button><button class="gh" data-a="rvn">Làm phiếu mới</button></div></div>
+</section>`);
+
+/* ===== Sơ đồ quy trình ===== */
+let sel=-1,fv=0;
+$('#flow').insertAdjacentHTML('beforebegin','<div class="row" id="fvb" style="margin:12px 0 0"></div><div id="fch" class="g" style="margin-top:12px"></div>');
+const FS=i=>{const s=ST[i],n=s[1].length,d=s[1].filter((_,j)=>S.done[i+'-'+j]).length;return[n,d,n?d/n:0]};
+function drawFlow(){const box=$('#fch');if(!box)return;
+ box.style.display=fv?'none':'';$('#flow').style.display=fv?'':'none';
+ $('#fvb').innerHTML=`<button class="${fv?'gh':'btn'}" data-a="fvw" data-k="0">🗺️ Sơ đồ</button><button class="${fv?'btn':'gh'}" data-a="fvw" data-k="1">📋 Danh sách và chỉnh sửa</button>${Q('Sơ đồ cho thấy toàn cảnh: bước màu xanh lục đã xong, viền xanh dương là bước bạn đang làm. Bấm vào một bước để tick việc. Muốn thêm, sửa, xóa hoặc đổi thứ tự bước thì sang Danh sách và chỉnh sửa.')}`;
+ if(fv||!ST.length)return;
+ const cur=ST.findIndex((_,i)=>FS(i)[2]<1),Wd=340,Hn=54,G=26;if(sel<0||sel>=ST.length)sel=cur<0?0:cur;
+ let v=`<svg viewBox="0 0 ${Wd} ${ST.length*(Hn+G)-G+8}" style="width:100%;max-width:420px;display:block;margin:0 auto" role="img" aria-label="Sơ đồ quy trình nghiên cứu"><defs><marker id="far" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--mut)"/></marker></defs>`;
+ ST.forEach((s,i)=>{const y=4+i*(Hn+G),[n,d,p]=FS(i),dn=n&&p==1;
+  if(i)v+=`<line x1="${Wd/2}" y1="${y-G+2}" x2="${Wd/2}" y2="${y-3}" stroke="var(--mut)" stroke-width="2" marker-end="url(#far)"/>`;
+  v+=`<g class="fn${dn?' dn':''}${i==cur?' cur':''}${i==sel?' sel':''}" data-a="fnode" data-i="${i}" tabindex="0" role="button" aria-label="Bước ${i+1}: ${esc(s[0])}"><rect class="bx" x="4" y="${y}" width="${Wd-8}" height="${Hn}" rx="14"/><circle cx="32" cy="${y+Hn/2}" r="15"/><text class="nn" x="32" y="${y+Hn/2+5}" text-anchor="middle">${dn?'✓':i+1}</text><text x="56" y="${y+22}">${esc(s[0].length>28?s[0].slice(0,27)+'…':s[0])}</text><rect class="pb" x="56" y="${y+33}" width="${Wd-110}" height="6" rx="3"/><rect class="pf" x="56" y="${y+33}" width="${(Wd-110)*p}" height="6" rx="3"/><text class="pc" x="${Wd-14}" y="${y+39}" text-anchor="end">${Math.round(p*100)}%</text></g>`});
+ v+='</svg>';
+ const s=ST[sel],[n,d,p]=FS(sel);
+ box.innerHTML=`<div class="card">${cur<0?'<p class="ok" style="margin-top:0">Tất cả các bước đã hoàn thành. Chúc mừng bạn!</p>':''}${v}</div><div class="card st"><div class="sh"><span class="num">${sel+1}</span><div><h3>${esc(s[0])}</h3><small class="mut">${d}/${n} việc${sel==cur?' · bước đang làm':''}</small></div><b>${Math.round(p*100)}%</b></div><div class="bar"><i style="width:${p*100}%"></i></div>${s[1].map((t,j)=>`<label class="ck"><input type="checkbox" data-a="tog" data-k="${sel}-${j}" ${S.done[sel+'-'+j]?'checked':''}>${esc(t)}</label>`).join('')||'<div class="empty">Bước này chưa có việc. Sang Danh sách để thêm.</div>'}</div>`}
+const f0=rFlow;rFlow=function(){f0();drawFlow()};
+
+/* ===== Đạo đức học thuật ===== */
+const EH=[['Trích dẫn và đạo văn',['Mọi ý tưởng, số liệu, hình ảnh của người khác đều có trích dẫn trong bài','Danh sách tài liệu tham khảo khớp với trích dẫn trong bài (không thừa, không thiếu)','Diễn đạt lại bằng lời của mình; trích nguyên văn thì để trong dấu ngoặc kép','Đã kiểm tra từng nguồn có thật, không dùng nguồn do AI tạo mà chưa đối chiếu','Nếu có dùng công cụ AI hỗ trợ, đã ghi rõ phần dùng theo quy định của trường']],
+['Người tham gia và đồng ý',['Có thư mời nêu rõ mục đích, nội dung và thời gian khảo sát','Người tham gia tự nguyện và được rút lui bất cứ lúc nào','Có sự đồng ý của giảng viên hoặc hội đồng đạo đức (nếu trường yêu cầu)','Đối tượng dưới 18 tuổi thì có sự đồng ý của phụ huynh hoặc người giám hộ','Không hỏi thông tin quá riêng tư hoặc gây tổn thương nếu không thật cần']],
+['Ẩn danh và bảo mật dữ liệu',['Không thu thập họ tên, số điện thoại, email nếu không cần','Danh tính được thay bằng mã, bảng mã cất riêng khỏi file dữ liệu','Dữ liệu lưu ở nơi có mật khẩu, chỉ nhóm nghiên cứu truy cập được','Khi báo cáo không để lộ thông tin nhận dạng (nhóm quá nhỏ, tên lớp...)','Có kế hoạch xóa dữ liệu thô sau khi đề tài kết thúc']],
+['Trung thực số liệu',['Không bịa, sửa hay chọn lọc số liệu cho khớp giả thuyết','Báo cáo cả kết quả không như mong đợi','Nêu rõ hạn chế của mẫu và phương pháp','Ghi công đúng cho từng thành viên và người hỗ trợ']]];
+const eth=()=>S.eth||(S.eth={}),ec=()=>{let d=0,t=0;EH.forEach((g,i)=>g[1].forEach((_,j)=>{t++;if(eth()[i+'-'+j])d++}));return[d,t]};
+const ep=()=>{const[d,t]=ec(),p=Math.round(d/t*100);$('#ehp').innerHTML=`<span class="big" style="font-size:1.8rem">${p}%</span> <span class="mut">${d}/${t} mục đạt</span><div class="bar"><i style="width:${p}%"></i></div>`+(d==t?'<p class="ok" style="margin:0">Đã đủ các mục.</p>':'<p class="mut" style="margin:0"><small>Mục chưa tick là chỗ hội đồng dễ hỏi nhất.</small></p>')};
+const rEth=()=>{$('#ehl').innerHTML=EH.map((g,i)=>`<div class="card" style="margin-top:12px"><h3>${g[0]}</h3>${g[1].map((x,j)=>`<label class="ck"><input type="checkbox" data-a="eck" data-k="${i}-${j}" ${eth()[i+'-'+j]?'checked':''}>${x}</label>`).join('')}</div>`).join('');ep()};
+const eto=()=>{const u=$('#eun').value.trim()||'[đơn vị]',c=$('#ect').value.trim()||'[email hoặc Zalo của nhóm]',m=$('#emn').value||10;
+ $('#eto').value=['THƯ MỜI THAM GIA KHẢO SÁT','','Kính gửi Anh/Chị/Bạn,','','Chúng tôi là nhóm nghiên cứu thuộc '+u+', đang thực hiện đề tài "'+(S.title||'[tên đề tài]')+'".','','1. Mục đích: thu thập ý kiến phục vụ nghiên cứu khoa học của nhóm.','2. Nội dung: trả lời khoảng '+m+' phút, không có câu trả lời đúng hay sai.','3. Tự nguyện: Anh/Chị/Bạn có thể bỏ qua câu hỏi bất kỳ hoặc dừng tham gia bất cứ lúc nào mà không bị ảnh hưởng gì.','4. Bảo mật: nhóm không thu thập thông tin nhận dạng (hoặc thay bằng mã). Câu trả lời chỉ dùng cho nghiên cứu này, được báo cáo dưới dạng tổng hợp, lưu trữ an toàn và xóa dữ liệu thô khi đề tài kết thúc.','5. Liên hệ khi cần hỏi thêm hoặc rút lại ý kiến: '+c+'.','','PHIẾU ĐỒNG Ý','[ ] Tôi đã đọc và hiểu thông tin trên.','[ ] Tôi đồng ý tham gia khảo sát một cách tự nguyện.','[ ] Tôi từ 18 tuổi trở lên (hoặc đã có sự đồng ý của người giám hộ).','','Họ tên hoặc mã: ..........................   Ngày: ....../....../......','Xin chân thành cảm ơn!'].join(NL)};
+$('#p-eth').addEventListener('input',eto);
+
+/* ===== Phản biện ===== */
+const PV=[['Cơ sở lý luận',['Vấn đề và câu hỏi nghiên cứu nêu rõ, đủ hẹp','Khái niệm chính được định nghĩa, dựa trên tài liệu uy tín','Chỉ ra được khoảng trống nghiên cứu; giả thuyết có cơ sở']],['Phương pháp',['Phương pháp phù hợp với câu hỏi nghiên cứu','Mẫu, cỡ mẫu và cách chọn mẫu được giải thích','Thang đo hoặc công cụ có nguồn và được kiểm tra độ tin cậy','Có nêu đạo đức nghiên cứu (đồng ý tham gia, ẩn danh)']],['Bằng chứng và kết quả',['Số liệu và kiểm định phù hợp với loại dữ liệu','Kết luận bám sát kết quả, không suy diễn quá mức','Có nêu hạn chế và hướng nghiên cứu tiếp']],['Trình bày',['Trích dẫn APA đầy đủ, không có dấu hiệu đạo văn','Bố cục mạch lạc, bảng biểu rõ ràng']]];
+const pv=()=>S.pr||(S.pr={w:'',d:'',v:{},a:'',b:'',c:''}),LB=['Chưa đạt','Cần sửa','Đạt'];
+const prc=()=>{const c=[0,0,0,0],V=pv().v;PV.forEach((g,i)=>g[1].forEach((_,j)=>{const x=V[i+'-'+j];c[x==null||x===''?3:+x]++}));return c};
+const prs=()=>{const c=prc();$('#prs').innerHTML=`<span class="ok">${c[2]} đạt</span> · ${c[1]} cần sửa · <span class="${c[0]?'late':''}">${c[0]} chưa đạt</span> · ${c[3]} chưa chấm`};
+const rPr=()=>{const P=pv();$('#prl').innerHTML=PV.map((g,i)=>`<div class="card" style="margin-top:12px"><h3>${g[0]}</h3>${g[1].map((x,j)=>`<div class="pr"><span>${x}</span><select data-pv="${i}-${j}" aria-label="${esc(x)}">${[['','Chưa chấm'],['2','Đạt'],['1','Cần sửa'],['0','Chưa đạt']].map(o=>`<option value="${o[0]}"${(P.v[i+'-'+j]||'')==o[0]?' selected':''}>${o[1]}</option>`).join('')}</select></div>`).join('')}</div>`).join('');
+ $$('#p-pr [data-pf]').forEach(e=>{e.value=P[e.dataset.pf]||''});prs()};
+const prx=()=>{const P=pv(),V=P.v,c=prc(),L=['PHIẾU PHẢN BIỆN','Người phản biện: '+(P.w||'...'),'Bài được phản biện: '+(P.d||'...'),''];
+ PV.forEach((g,i)=>{L.push(g[0].toUpperCase());g[1].forEach((x,j)=>{const y=V[i+'-'+j];L.push('- '+x+': '+(y==null||y===''?'chưa chấm':LB[+y]))})});
+ return L.concat(['','Tổng kết: '+c[2]+' đạt, '+c[1]+' cần sửa, '+c[0]+' chưa đạt, '+c[3]+' chưa chấm','Điểm mạnh: '+(P.a||''),'Điểm cần sửa: '+(P.b||''),'Đề xuất: '+(P.c||'')]).join(NL)};
+$('#p-pr').addEventListener('input',e=>{const t=e.target,d=t.dataset,P=pv();if(d.pv!=null)P.v[d.pv]=t.value;else if(d.pf)P[d.pf]=t.value;else return;save();prs()});
+
+/* ===== Xuất .ics và nhắc việc ===== */
+const ic=s=>String(s==null?'':s).replace(/[\\;,]/g,'\\$&').replace(/\n/g,'\\n'),fold=l=>l.replace(/(.{70})(?=.)/g,'$1\r\n ');
+const mkics=()=>{const st=new Date().toISOString().replace(/[-:]|\.\d+/g,''),L=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//NCKH Studio//VI','CALSCALE:GREGORIAN','X-WR-CALNAME:'+ic('NCKH: '+(S.title||'Đề tài'))],av=(tr,m)=>L.push('BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:'+ic(m),'TRIGGER:'+tr,'END:VALARM');
+ evs().filter(e=>!e.x).forEach(e=>{const d=e.d.replace(/-/g,''),T=e.tm?e.tm.replace(':','')+'00':'',h=[...(e.id+d+e.t)].reduce((a,c)=>(a*31+c.charCodeAt(0))>>>0,7);
+  L.push('BEGIN:VEVENT','UID:'+h.toString(36)+d+'@nckh-studio','DTSTAMP:'+st,'SUMMARY:'+ic(e.t),'DESCRIPTION:'+ic([KT[e.k][0],e.w&&'Phụ trách: '+e.w,e.l].filter(Boolean).join(' · ')));
+  if(T)L.push('DTSTART:'+d+'T'+T,'DURATION:PT1H');else L.push('DTSTART;VALUE=DATE:'+d,'DURATION:P1D');
+  av(T?'-PT30M':'-PT15H','Sắp tới: '+e.t);if(e.k==2)av('-P3D','Còn 3 ngày: '+e.t);L.push('END:VEVENT')});
+ L.push('END:VCALENDAR');return L.map(fold).join('\r\n')+'\r\n'};
+const hasEv=()=>evs().some(e=>!e.x);
+async function icsSave(){if(!hasEv())return toast('Chưa có việc nào để xuất');
+ const txt=mkics(),blob=new Blob([txt],{type:'text/calendar'});let dl=null;try{dl=window.claude&&await claude.use('downloads')}catch(e){}
+ if(dl){try{await dl.save({filename:'nckh-lich.ics',data:blob});return toast('Đã lưu lịch')}catch(e){
+   if(e&&e.code=='declined')return;
+   if(e&&e.code=='rejected_extension'){try{await dl.save({filename:'nckh-lich.txt',data:blob});$('#icsn').textContent='Đã lưu file .txt. Hãy đổi đuôi thành .ics rồi nhập vào Google Calendar hoặc Apple Calendar.';return}catch(x){}}}}
+ try{const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='nckh-lich.ics';document.body.appendChild(a);a.click();a.remove();toast('Đã gửi lệnh tải. Nếu không thấy file, bấm Sao chép nội dung .ics')}catch(e){toast('Không tải được, hãy dùng Sao chép')}}
+$('#p-cal').insertAdjacentHTML('beforeend',`<div class="card" style="margin-top:16px"><h3>Xuất lịch và nhắc việc${Q('File .ics nhập được vào Google Calendar, Apple Calendar hay Outlook. Mỗi việc có sẵn chuông nhắc (hạn nộp nhắc thêm trước 3 ngày) nên điện thoại vẫn nhắc khi bạn không mở trang này. Nhập lại file mới sẽ cập nhật, không nhân đôi.')}</h3><p class="mut" style="margin:4px 0 10px"><small>Gồm việc trong lịch, công việc có hạn và hạn nộp chưa đánh dấu xong.</small></p><div class="row"><button class="btn" data-a="icsx">Tải lịch .ics</button><button class="gh" data-a="icsc">Sao chép nội dung .ics</button><button class="gh" id="remb" data-a="remt"></button></div><small class="mut" id="icsn"></small></div>`);
+const rmb=()=>{$('#remb').textContent='🔔 Nhắc khi mở trang: '+(S.rem?'Bật':'Tắt')};
+const due=n=>{const a=iso(new Date()),b=iso(new Date(Date.now()+n*864e5));return evs().filter(e=>!e.x&&e.d>=a&&e.d<=b)};
+const rmd=()=>{if(!S.rem)return;const k=iso(new Date()),N=S.rn&&S.rn.k==k?S.rn:(S.rn={k,l:[]}),L=due(1).filter(e=>!N.l.includes(e.id+e.d+e.t));if(!L.length)return;
+ L.forEach(e=>N.l.push(e.id+e.d+e.t));save();
+ try{if(window.Notification&&Notification.permission=='granted'){new Notification('NCKH Studio: sắp đến hạn',{body:L.map(e=>(e.d==k?'Hôm nay':'Ngày mai')+(e.tm?' '+e.tm:'')+': '+e.t).join(NL)});return}}catch(x){}
+ toast(L.length+' việc đến hạn hôm nay hoặc ngày mai');rUp()};
+const u0=rUp;rUp=function(){u0();const L=due(2);if(L.length)$('#up').insertAdjacentHTML('afterbegin',`<div class="res" style="margin:0 0 10px"><b style="font-size:1rem;color:var(--r)">⏰ Sắp đến hạn (2 ngày tới)</b>${L.map(e=>`<p style="margin:4px 0 0">${dm(e.d).slice(0,5)}${e.tm?' '+e.tm:''} · ${esc(e.t)}</p>`).join('')}</div>`)};
+
+/* ===== Đồng bộ công việc cho nhóm (tài liệu riêng team/tasks) ===== */
+let tdb=null,tsub=0,ttm=0,tlast='';const tset=m=>{const e=$('#tks');if(e)e.textContent=m};
+$('#ss').insertAdjacentHTML('afterend','<p class="mut" id="tks" style="margin:0 0 10px"></p>');
+const gh=$('#p-team .mut small');if(gh)gh.innerHTML=gh.innerHTML.replace('Lịch, thành viên và liên kết sẽ','Lịch, thành viên, liên kết và công việc sẽ');
+function tpush(){if(!tdb)return;tk();const j=JSON.stringify(S.tasks);if(j==tlast)return;clearTimeout(ttm);ttm=setTimeout(()=>{tlast=j;tdb.set({tk:JSON.parse(j),at:Date.now()}).catch(e=>tset('Không ghi được công việc: '+(e.message||e)))},600)}
+async function tsync(){try{const db=window.claude&&await claude.use('db');if(!db)return tset('Công việc chưa đồng bộ. Hãy mở trang bằng link claude.ai và đăng nhập.');
+ tk();tdb=db.doc('team/tasks');if(tsub)tsub();let first=1;
+ tsub=tdb.onSnapshot(s=>{if(s.metadata.hasPendingWrites)return;const d=s.exists?s.data():null;
+  if(d&&Array.isArray(d.tk))S.tasks=first?[...new Map([...S.tasks,...d.tk].map(x=>[x.id,x])).values()]:d.tk;
+  tk();try{localStorage.setItem('nckh',JSON.stringify(S))}catch(e){}
+  tlast=JSON.stringify(S.tasks);if(first&&(!d||JSON.stringify(d.tk||[])!=tlast))tlast='';first=0;tpush();rTasks();rStats();rCal();rUp();tset('Công việc đang đồng bộ với nhóm')},e=>tset('Lỗi đồng bộ công việc: '+(e.message||e)))}catch(e){tset('Không bật được đồng bộ công việc: '+(e.message||e))}}
+const p0=push;push=function(){p0();tpush()};
+
+/* ===== Chú thích ? cho các mục có sẵn ===== */
+const HT={'Tính cỡ mẫu':'Cỡ mẫu là số người cần khảo sát. Cochran dùng khi chưa biết tổng thể, Slovin khi biết tổng thể N. Chưa ai yêu cầu khác thì để tin cậy 95%, sai số 5%.','Phân tích dữ liệu':'Dán bảng số từ Excel: mỗi dòng là một người, mỗi cột là một biến. Không dán tiêu đề cột hay chữ. Chưa chắc dùng phép nào thì xem khung "Nên dùng phép kiểm định nào?" bên dưới.','Chia sẻ và đồng bộ nhóm':'Mọi người mở cùng link rồi bấm Bật đồng bộ nhóm. Lịch, thành viên, liên kết và công việc dùng chung; tiến độ quy trình, tài liệu và nhật ký vẫn riêng từng người.','Lịch Gantt tự động':'Mỗi bước được chia thời gian theo ngày bắt đầu và hạn nộp. Vạch đỏ là hôm nay: nếu vạch đi qua bước chưa xong, bạn đang chậm tiến độ.','Cỡ mẫu theo power':'Power là xác suất phát hiện đúng một khác biệt có thật. 0,8 nghĩa là 80%. Cỡ ảnh hưởng càng nhỏ thì cần mẫu càng lớn.','Cỡ mẫu EFA và hồi quy':'EFA là phân tích nhân tố khám phá, thường cần ít nhất 5 mẫu mỗi biến quan sát và không dưới 100 người.','Kế hoạch công việc':'Bấm mũi tên để chuyển việc giữa Cần làm, Đang làm và Hoàn thành. Việc có hạn sẽ hiện ở tab Lịch.'};
+$$('h2').forEach(h=>{const t=HT[h.textContent.trim()];if(t&&!h.querySelector('.hq'))h.insertAdjacentHTML('beforeend',Q(t))});
+
+/* ===== Xử lý bấm ===== */
+document.addEventListener('click',ev=>{const el=ev.target.closest('[data-a]');if(!el)return;const D=el.dataset,a=D.a;
+ if(a=='fnode'){sel=+D.i;drawFlow()}
+ else if(a=='fvw'){fv=+D.k;drawFlow()}
+ else if(a=='tab'){if(D.k=='eth'){rEth();eto()}else if(D.k=='pr')rPr();else if(D.k=='cal')rmb()}
+ else if(a=='eck'){eth()[D.k]=el.checked;save();ep()}
+ else if(a=='ecp')cp($('#eto').value);
+ else if(a=='ean'){const n=$('#ean').value.split(NL).map(x=>x.trim()).filter(Boolean),c=n.map((_,i)=>'P'+String(i+1).padStart(3,'0'));for(let i=c.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[c[i],c[j]]=[c[j],c[i]]}$('#eao').value=n.map((x,i)=>c[i]+' = '+x).join(NL)}
+ else if(a=='eac'){if($('#eao').value)cp($('#eao').value)}
+ else if(a=='rvq')cp(prx());
+ else if(a=='rvn'){S.pr={w:'',d:'',v:{},a:'',b:'',c:''};save();rPr();toast('Đã tạo phiếu mới')}
+ else if(a=='icsx')icsSave();
+ else if(a=='icsc'){if(hasEv())cp(mkics());else toast('Chưa có việc nào để xuất')}
+ else if(a=='remt'){S.rem=!S.rem;if(S.rem&&window.Notification&&Notification.permission=='default'){try{Notification.requestPermission().then(rmd)}catch(x){}}save();rmb();rmd()}
+ else if(a=='sync')tsync()});
+
+/* ===== Khởi động ===== */
+rFlow();rEth();eto();rPr();rmb();rUp();
+if(S.team)setTimeout(tsync,600);
+setTimeout(rmd,1500);setInterval(rmd,3e5);
+}catch(e){console.error('NCKH add-on 4',e)}})();
+</script>
+<!-- NCKH Studio: khối mã bổ sung số 5 (danh sách chọn nền tối chữ trắng, Mindmap có tải PNG/SVG/Word/JSON, ma trận tổng quan tài liệu, chuỗi tìm kiếm Boolean, CR và AVE). Dán nguyên khối này ngay trước thẻ đóng body, sau khối script cuối cùng. Không cần sửa dòng cũ nào. -->
+<style>
+select option,select optgroup{background:#0b1430;color:#fff}
+select option:checked{background:#0fa89a linear-gradient(#0fa89a,#0fa89a);color:#fff}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]) select{color-scheme:dark}}
+:root[data-theme=dark] select{color-scheme:dark}
+.mmw{overflow:auto;border:1px solid var(--bd);border-radius:14px;background:var(--inp);max-height:68vh;padding:6px}
+.mmw svg{display:block}.mn{cursor:pointer}
+.sw{width:26px;height:26px;padding:0;border-radius:50%;border:2px solid var(--bd);cursor:pointer}
+</style>
+<script>
+(()=>{try{
+const NL=String.fromCharCode(10),T9=String.fromCharCode(9),Q=String.fromCharCode(34),sm=a=>a.reduce((s,v)=>s+v,0),
+PAL=['#3b5bdb','#0fa89a','#f59f00','#e8590c','#ae3ec9','#d6336c','#2f9e44','#1098ad'];
+
+/* ===== Mindmap: dữ liệu, mẫu, bố cục ===== */
+const N=(t,k)=>({i:uid(),t,k:(k||[]).map(x=>typeof x=='string'?N(x):x)});
+const TP=[
+()=>N(S.title||'Đề tài nghiên cứu',[N('Mục tiêu',['Mục tiêu chung','Mục tiêu cụ thể']),N('Câu hỏi và giả thuyết',['Câu hỏi nghiên cứu','H1','H2']),N('Phương pháp',['Đối tượng và mẫu','Công cụ thu thập','Xử lý số liệu']),N('Kết quả dự kiến',['Sản phẩm','Đóng góp mới']),N('Hạn chế',['Hướng nghiên cứu tiếp'])]),
+()=>N(S.title||'Mô hình nghiên cứu',[N('Biến độc lập (X)',['X1','X2','X3']),N('Biến trung gian (M)',['M']),N('Biến điều tiết (W)',['W']),N('Biến kiểm soát',['Giới tính','Năm học']),N('Biến phụ thuộc (Y)',['Y']),N('Giả thuyết',['H1: X → Y (+)','H2: X → M (+)','H3: M → Y (+)'])]),
+()=>N(S.title||'Tổng quan tài liệu',[N('Lý thuyết nền'),N('Nghiên cứu trong nước'),N('Nghiên cứu ngoài nước'),N('Khoảng trống nghiên cứu',['Điều chưa ai làm']),N('Đóng góp của đề tài')])];
+const mm=()=>S.mm||(S.mm=TP[0]());
+let ms=null,z=1,U=[];
+const cx=document.createElement('canvas').getContext('2d');cx.font='600 13px system-ui,Arial,sans-serif';
+const fn=(n,i,P)=>{if(n.i==i)return[n,P||0];for(const c of n.k){const r=fn(c,i,n);if(r)return r}return 0};
+const sn=()=>{U.push(JSON.stringify(mm()));if(U.length>30)U.shift()};
+const wr=t=>{const o=[];let l='';String(t||'…').split(' ').filter(Boolean).forEach(s=>{const q=l?l+' '+s:s;if(l&&cx.measureText(q).width>180){o.push(l);l=s}else l=q});o.push(l);return o};
+function lay(r){const mw=[];let cy=0;
+ const m=(n,d,c)=>{const b={n,d,col:n.c!=null?n.c:c,L:wr(n.t),k:[]};b.w=Math.max(...b.L.map(l=>cx.measureText(l).width))+28;b.h=b.L.length*17+16;mw[d]=Math.max(mw[d]||0,b.w);if(!n.o)b.k=n.k.map((h,i)=>m(h,d+1,d?b.col:i%PAL.length));return b},
+ R=m(r,0,0),X=[24];
+ mw.forEach((w,i)=>{X[i+1]=X[i]+w+60});
+ const y=b=>{b.x=X[b.d];if(!b.k.length){b.y=cy+b.h/2+8;cy+=b.h+14;return}b.k.forEach(y);b.y=(b.k[0].y+b.k[b.k.length-1].y)/2};
+ y(R);return{R,W:X[mw.length]-60+24,H:cy+12}}
+function msv(ex){const{R,W,H}=lay(mm());let p='',g='';
+ const d=b=>{const col=b.d?PAL[b.col]:'#3b5bdb',s=!ex&&b.n.i==ms;
+  b.k.forEach(c=>{const a=b.x+b.w,e=c.x,h=(a+e)/2;p+=`<path d='M${a} ${b.y}C${h} ${b.y} ${h} ${c.y} ${e} ${c.y}' fill='none' stroke='${PAL[c.col]}' stroke-width='2.5' opacity='.8'/>`;d(c)});
+  g+=`<g class='mn' data-a='mm' data-k='sel' data-n='${esc(b.n.i)}'><rect x='${b.x}' y='${b.y-b.h/2}' width='${b.w}' height='${b.h}' rx='${b.d?10:18}' fill='${col}'${s?` stroke='#ffb703' stroke-width='3.5'`:''}/>${b.L.map((l,j)=>`<text x='${b.x+b.w/2}' y='${b.y-b.h/2+21+17*j}' text-anchor='middle' fill='#fff' font-size='13' font-weight='600'>${esc(l)}</text>`).join('')}${b.n.o&&b.n.k.length?`<circle cx='${b.x+b.w}' cy='${b.y}' r='10' fill='#fff' stroke='${col}' stroke-width='2'/><text x='${b.x+b.w}' y='${b.y+4}' text-anchor='middle' font-size='11' font-weight='700' fill='${col}'>${b.n.k.length}</text>`:''}</g>`};
+ d(R);
+ return{W,H,s:`<svg xmlns='http://www.w3.org/2000/svg' width='${ex?W:Math.round(W*z)}' height='${ex?H:Math.round(H*z)}' viewBox='0 0 ${W} ${H}' font-family='system-ui,Arial,sans-serif'>${ex?`<rect width='${W}' height='${H}' fill='#fff'/>`:''}${p}${g}</svg>`}}
+const dr=()=>{if(!fn(mm(),ms))ms=mm().i;$('#mmw').innerHTML=msv(0).s;$('#mmz').textContent=Math.round(z*100)+'%'};
+const sy=()=>{const n=fn(mm(),ms);$('#mtx').value=n?n[0].t:''};
+
+/* ===== Xuất: PNG, SVG, Word (.docx tự dựng), JSON ===== */
+const sv=async(fnm,b)=>{let d=null;try{d=window.claude&&await claude.use('downloads')}catch(e){}
+ if(d){try{await d.save({filename:fnm,data:b});return toast('Đã lưu '+fnm)}catch(e){const c=e&&e.code;if(c=='declined')return;if(c=='rejected_extension'||c=='extension_not_enabled')return toast('Trang này chưa cho tải định dạng .'+fnm.split('.').pop());if(c=='rate_limited')return toast('Đang có hộp thoại lưu khác, hãy thử lại sau')}}
+ try{const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=fnm;document.body.appendChild(a);a.click();a.remove();toast('Đã gửi lệnh tải '+fnm)}catch(e){toast('Không tải được file')}};
+const png=()=>new Promise((ok,no)=>{const{s,W,H}=msv(1),im=new Image(),sc=Math.min(2,8000/Math.max(W,H));
+ im.onload=()=>{const c=document.createElement('canvas');c.width=Math.round(W*sc);c.height=Math.round(H*sc);c.getContext('2d').drawImage(im,0,0,c.width,c.height);c.toBlob(b=>b?ok({b,W,H}):no(new Error('Không tạo được ảnh')),'image/png')};
+ im.onerror=()=>no(new Error('Không vẽ được sơ đồ'));
+ im.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(s)});
+const crc=(()=>{const t=[];for(let n=0;n<256;n++){let c=n;for(let j=0;j<8;j++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0}return b=>{let c=-1;for(let i=0;i<b.length;i++)c=t[(c^b[i])&255]^(c>>>8);return(c^-1)>>>0}})();
+const u2=v=>[v&255,(v>>8)&255],u4=v=>[v&255,(v>>8)&255,(v>>16)&255,(v>>>24)&255],enc=new TextEncoder();
+function zip(F){const ch=[],cd=[];let o=0;
+ F.forEach(([n,d])=>{const nb=enc.encode(n),c=crc(d),h=[80,75,3,4,...u2(20),...u2(0),...u2(0),...u2(0),...u2(33),...u4(c),...u4(d.length),...u4(d.length),...u2(nb.length),...u2(0)];
+  ch.push(new Uint8Array(h),nb,d);
+  cd.push(new Uint8Array([80,75,1,2,...u2(20),...u2(20),...u2(0),...u2(0),...u2(0),...u2(33),...u4(c),...u4(d.length),...u4(d.length),...u2(nb.length),...u2(0),...u2(0),...u2(0),...u2(0),...u4(0),...u4(o)]),nb);
+  o+=h.length+nb.length+d.length});
+ const s=cd.reduce((t,a)=>t+a.length,0);
+ return new Blob([...ch,...cd,new Uint8Array([80,75,5,6,0,0,0,0,...u2(F.length),...u2(F.length),...u4(s),...u4(o),0,0])],{type:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'})}
+async function docx(){const{b,W,H}=await png(),by=new Uint8Array(await b.arrayBuffer()),r=mm(),sc=Math.min(9525,9000000/W,5400000/H),CX=Math.round(W*sc),CY=Math.round(H*sc),
+ X=`<?xml version='1.0' encoding='UTF-8' standalone='yes'?>`,R='http://schemas.openxmlformats.org/',E=s=>enc.encode(s),
+ P=(t,i,h)=>`<w:p><w:pPr><w:ind w:left='${i*400}'/></w:pPr><w:r><w:rPr>${h?'<w:b/>':''}<w:sz w:val='${h?32:26}'/></w:rPr><w:t xml:space='preserve'>${esc(t)}</w:t></w:r></w:p>`,
+ wk=(n,d)=>P('• '+n.t,d)+n.k.map(c=>wk(c,d+1)).join(''),
+ doc=X+`<w:document xmlns:w='${R}wordprocessingml/2006/main' xmlns:r='${R}officeDocument/2006/relationships' xmlns:wp='${R}drawingml/2006/wordprocessingDrawing' xmlns:a='${R}drawingml/2006/main' xmlns:pic='${R}drawingml/2006/picture'><w:body>${P(r.t,0,1)}<w:p><w:r><w:drawing><wp:inline distT='0' distB='0' distL='0' distR='0'><wp:extent cx='${CX}' cy='${CY}'/><wp:docPr id='1' name='Mindmap'/><a:graphic><a:graphicData uri='${R}drawingml/2006/picture'><pic:pic><pic:nvPicPr><pic:cNvPr id='0' name='mindmap.png'/><pic:cNvPicPr/></pic:nvPicPr><pic:blipFill><a:blip r:embed='rId1'/><a:stretch><a:fillRect/></a:stretch></pic:blipFill><pic:spPr><a:xfrm><a:off x='0' y='0'/><a:ext cx='${CX}' cy='${CY}'/></a:xfrm><a:prstGeom prst='rect'><a:avLst/></a:prstGeom></pic:spPr></pic:pic></a:graphicData></a:graphic></wp:inline></w:drawing></w:r></w:p>${P('Dàn ý dạng văn bản',0,1)}${r.k.map(c=>wk(c,0)).join('')}<w:sectPr><w:pgSz w:w='16838' w:h='11906' w:orient='landscape'/><w:pgMar w:top='1134' w:right='1134' w:bottom='1134' w:left='1134' w:header='708' w:footer='708' w:gutter='0'/></w:sectPr></w:body></w:document>`;
+ return zip([
+  ['[Content_Types].xml',E(X+`<Types xmlns='${R}package/2006/content-types'><Default Extension='rels' ContentType='application/vnd.openxmlformats-package.relationships+xml'/><Default Extension='xml' ContentType='application/xml'/><Default Extension='png' ContentType='image/png'/><Override PartName='/word/document.xml' ContentType='application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml'/></Types>`)],
+  ['_rels/.rels',E(X+`<Relationships xmlns='${R}package/2006/relationships'><Relationship Id='rId1' Type='${R}officeDocument/2006/relationships/officeDocument' Target='word/document.xml'/></Relationships>`)],
+  ['word/document.xml',E(doc)],
+  ['word/_rels/document.xml.rels',E(X+`<Relationships xmlns='${R}package/2006/relationships'><Relationship Id='rId1' Type='${R}officeDocument/2006/relationships/image' Target='media/image1.png'/></Relationships>`)],
+  ['word/media/image1.png',by]])}
+
+/* ===== Mindmap: dàn ý, thao tác ===== */
+const ol=(n,d)=>'  '.repeat(d)+n.t+NL+n.k.map(c=>ol(c,d+1)).join('');
+const ps=t=>{const r={i:uid(),t:'',k:[]},st=[[r,-1]];
+ t.split(NL).filter(l=>l.trim()).forEach(l=>{const u=l.split(T9).join('  '),d=u.length-u.trimStart().length,n=N(u.trim().replace(/^[-*•+] +|^[0-9]+[.)] +/,''));while(st.length>1&&st[st.length-1][1]>=d)st.pop();st[st.length-1][0].k.push(n);st.push([n,d])});
+ if(r.k.length==1)return r.k[0];r.t=S.title||'Chủ đề';return r};
+const act=(k,D)=>{const r=mm(),[n,p]=fn(r,ms)||[r,0];
+ if(k=='add'){sn();const c=N('Ý mới');n.o=0;n.k.push(c);ms=c.i}
+ else if(k=='sib'){sn();const c=N('Ý mới');if(p)p.k.splice(p.k.indexOf(n)+1,0,c);else n.k.push(c);ms=c.i}
+ else if(k=='del'){if(!p)return toast('Không xóa được ô gốc');sn();p.k.splice(p.k.indexOf(n),1);ms=p.i}
+ else if(k=='up'||k=='dn'){if(!p)return;const L=p.k,i=L.indexOf(n),j=i+(k=='up'?-1:1);if(j<0||j>=L.length)return;sn();[L[i],L[j]]=[L[j],L[i]]}
+ else if(k=='co'){n.o=n.o?0:1}
+ else if(k=='col'){sn();n.c=+D.v}
+ else if(k=='tpl'){sn();S.mm=TP[+D.v]();ms=S.mm.i}
+ else if(k=='imp'){const v=$('#mim').value.trim();if(!v)return toast('Hãy dán dàn ý hoặc JSON vào ô nhập');let t;try{t=v[0]=='{'?JSON.parse(v):ps(v)}catch(e){return toast('Không đọc được dữ liệu')}if(!t||!Array.isArray(t.k))return toast('Dữ liệu không hợp lệ');sn();S.mm=t;ms=t.i;$('#mim').value=''}
+ else if(k=='un'){if(!U.length)return toast('Chưa có thao tác để hoàn tác');S.mm=JSON.parse(U.pop());ms=null}
+ else if(k=='z'){z=+D.v?Math.max(.4,Math.min(2.5,z+(+D.v))):1;dr();return}
+ else if(k=='ol')return cp(ol(r,0));
+ dr();sy();save()};
+
+/* ===== Ma trận tài liệu, Boolean, CR và AVE ===== */
+const LM=[['a','Tác giả, năm'],['g','Mục tiêu hoặc câu hỏi'],['m','Mẫu và phương pháp'],['k','Kết quả chính'],['h','Hạn chế'],['l','Liên hệ với đề tài']];
+const rLM=()=>{const l=A('lm');$('#lmo').innerHTML=l.length?`<div class='tw'><table><tr>${LM.map(c=>`<th style='text-align:left'>${c[1]}</th>`).join('')}<th></th></tr>${l.map((r,i)=>`<tr>${LM.map(c=>`<td style='white-space:normal;text-align:left;min-width:130px;vertical-align:top'>${esc(r[c[0]]||'')}</td>`).join('')}<td><button class='gh' data-a='lm' data-k='x' data-i='${i}' aria-label='Xóa'>🗑️</button></td></tr>`).join('')}</table></div>`:`<div class='empty'>Chưa có nghiên cứu nào trong bảng.</div>`};
+const ch=(h,t)=>{try{const d=document.createElement('div');d.innerHTML=h;d.style.cssText='position:fixed;left:-9999px;top:0;background:#fff;color:#000';document.body.appendChild(d);const r=document.createRange();r.selectNodeContents(d);const s=getSelection();s.removeAllRanges();s.addRange(r);const ok=document.execCommand('copy');s.removeAllRanges();d.remove();ok?toast('Đã sao chép bảng, dán vào Word hoặc Excel'):cp(t)}catch(e){cp(t)}};
+const bs=()=>{const g=$$('.bsg').map(e=>e.value.split(/[,;]+/).map(x=>x.trim()).filter(Boolean)).filter(a=>a.length),q=g.map(a=>'('+a.map(x=>x.includes(' ')?Q+x+Q:x).join(' OR ')+')').join(' AND '),u=encodeURIComponent(q);
+ $('#bso').value=q;
+ $('#bsl').innerHTML=q?[['Google Scholar','https://scholar.google.com/scholar?q='],['PubMed','https://pubmed.ncbi.nlm.nih.gov/?term='],['Semantic Scholar','https://www.semanticscholar.org/search?q='],['CORE','https://core.ac.uk/search?q=']].map(s=>`<a class='gh' style='text-decoration:none' href='${esc(s[1]+u)}' target='_blank' rel='noopener'>${s[0]}</a>`).join(''):''};
+const cr=()=>{const R=$('#crt').value.split(NL).map(l=>l.split(':')).filter(p=>p.length>1).map(p=>[p[0].trim(),p[1].replace(/[;,]/g,' ').split(' ').map(Number).filter(v=>v>0&&v<1)]).filter(p=>p[1].length>1);
+ $('#cro').innerHTML=R.length?TB(['Nhân tố','Số biến','CR','AVE','√AVE','Đánh giá'],R.map(([t,l])=>{const s=sm(l),C=s*s/(s*s+sm(l.map(v=>1-v*v))),V=sm(l.map(v=>v*v))/l.length,ok=C>=.7&&V>=.5;return[esc(t),l.length,f(C),f(V),f(Math.sqrt(V)),`<span class='${ok?'ok':'late'}'>${ok?'Đạt':V<.5?'AVE dưới 0,5':'CR dưới 0,7'}</span>`]}))+`<p class='mut'><small>CR từ 0,7 và AVE từ 0,5 là đạt (Fornell và Larcker). Hệ số tải nên từ 0,7. Muốn kiểm tra độ phân biệt, so √AVE với tương quan giữa các nhân tố.</small></p>`:`<div class='empty'>Nhập mỗi dòng một nhân tố, ví dụ: Hài lòng: 0.78, 0.81, 0.74</div>`};
+
+/* ===== Giao diện: tab và khung ===== */
+$('#nav [data-k=rep]').insertAdjacentHTML('beforebegin',`<button data-a='tab' data-k='mm'>🧠 Mindmap</button><button data-a='tab' data-k='dp'>🔬 Chuyên sâu</button>`);
+$('#p-notes').insertAdjacentHTML('afterend',`<section class='panel' id='p-mm'>
+<div class='card'><h2>Mindmap nghiên cứu</h2>
+<p class='mut' style='margin-top:0'><small>Bấm vào một ô để chọn, rồi thêm nhánh hoặc sửa chữ ở ô nhập bên dưới. Phím tắt khi đang chọn ô: Tab thêm nhánh con, Enter thêm cùng cấp, Delete xóa. Dữ liệu tự lưu trên máy.</small></p>
+<div class='row'><input id='mtx' placeholder='Nội dung ô đang chọn' style='flex:1;min-width:200px;margin:0'><button class='btn' data-a='mm' data-k='add'>＋ Nhánh con</button><button class='gh' data-a='mm' data-k='sib'>＋ Cùng cấp</button><button class='gh' data-a='mm' data-k='co'>⊟ Thu gọn</button><button class='gh' data-a='mm' data-k='up' aria-label='Lên'>▲</button><button class='gh' data-a='mm' data-k='dn' aria-label='Xuống'>▼</button><button class='gh' data-a='mm' data-k='del' aria-label='Xóa ô'>🗑️</button><button class='gh' data-a='mm' data-k='un'>↶ Hoàn tác</button></div>
+<div class='row' style='margin-top:10px'><small class='mut'>Màu</small>${PAL.map((c,i)=>`<button class='sw' style='background:${c}' data-a='mm' data-k='col' data-v='${i}' aria-label='Màu ${i+1}'></button>`).join('')}<small class='mut' style='margin-left:10px'>Thu phóng</small><button class='gh' data-a='mm' data-k='z' data-v='-0.1' aria-label='Thu nhỏ'>−</button><b id='mmz'>100%</b><button class='gh' data-a='mm' data-k='z' data-v='0.1' aria-label='Phóng to'>＋</button><button class='gh' data-a='mm' data-k='z' data-v='0'>Đặt lại</button></div>
+<div class='row' style='margin-top:10px'><small class='mut'>Mẫu</small><button class='gh' data-a='mm' data-k='tpl' data-v='0'>Đề cương</button><button class='gh' data-a='mm' data-k='tpl' data-v='1'>Mô hình nghiên cứu</button><button class='gh' data-a='mm' data-k='tpl' data-v='2'>Tổng quan tài liệu</button></div></div>
+<div class='mmw' id='mmw' style='margin-top:12px'></div>
+<div class='g'><div class='card'><h3>Tải về và chia sẻ</h3><div class='row' style='margin:10px 0'><button class='btn' data-a='mx' data-k='png'>Ảnh PNG</button><button class='btn' data-a='mx' data-k='doc'>Word (.docx)</button><button class='gh' data-a='mx' data-k='svg'>SVG</button><button class='gh' data-a='mx' data-k='json'>JSON</button><button class='gh' data-a='mx' data-k='img'>Sao chép ảnh</button><button class='gh' data-a='mm' data-k='ol'>Sao chép dàn ý</button></div><small class='mut'>File Word gồm sơ đồ dạng ảnh và dàn ý dạng chữ để bạn chỉnh tiếp. JSON dùng để lưu và nhập lại mindmap.</small></div>
+<div class='card'><h3>Nhập từ dàn ý hoặc JSON</h3><textarea id='mim' placeholder='Tên đề tài&#10;  Mục tiêu&#10;  Phương pháp&#10;    Khảo sát'></textarea><button class='btn' style='margin-top:10px' data-a='mm' data-k='imp'>Tạo mindmap</button></div></div></section>
+<section class='panel' id='p-dp'>
+<div class='card'><h2>Ma trận tổng quan tài liệu</h2><p class='mut' style='margin-top:0'><small>Mỗi dòng là một nghiên cứu đã đọc. Bảng này giúp bạn thấy khoảng trống nghiên cứu và là phần giảng viên thường yêu cầu.</small></p>
+<div class='g2' style='grid-template-columns:repeat(auto-fit,minmax(180px,1fr))'>${LM.map(c=>`<label>${c[1]}<input data-lm='${c[0]}'></label>`).join('')}</div>
+<div class='row'><button class='btn' data-a='lm' data-k='add'>Thêm vào bảng</button><button class='gh' data-a='lm' data-k='cp'>Sao chép bảng (dán vào Word, Excel)</button></div><div id='lmo' style='margin-top:12px'></div></div>
+<div class='g'><div class='card'><h2>Chuỗi tìm kiếm Boolean</h2><p class='mut' style='margin-top:0'><small>Mỗi ô là một khái niệm, các từ đồng nghĩa cách nhau bằng dấu phẩy. Nên thử cả từ tiếng Anh.</small></p>
+<label>Khái niệm 1<input class='bsg' placeholder='mạng xã hội, social media, facebook'></label><label>Khái niệm 2<input class='bsg' placeholder='kết quả học tập, academic performance'></label><label>Khái niệm 3 (nếu có)<input class='bsg' placeholder='sinh viên, undergraduate'></label>
+<textarea id='bso' readonly rows='3'></textarea><div class='row' style='margin-top:10px' id='bsl'></div><button class='gh' style='margin-top:10px' data-a='bs' data-k='cp'>Sao chép chuỗi</button></div>
+<div class='card'><h2>CR và AVE của thang đo</h2><p class='mut' style='margin-top:0'><small>Mỗi dòng một nhân tố: tên, dấu hai chấm, các hệ số tải ngoài (dùng dấu chấm thập phân).</small></p><textarea id='cro_in' style='display:none'></textarea><textarea id='crt' rows='5' placeholder='Hài lòng: 0.78, 0.81, 0.74&#10;Gắn bó: 0.82, 0.69, 0.77'></textarea><div id='cro'></div></div></div></section>`);
+
+/* ===== Sự kiện ===== */
+document.addEventListener('click',async ev=>{const el=ev.target.closest('[data-a]');if(!el)return;const D=el.dataset,a=D.a,k=D.k;
+ if(a=='tab'){if(k=='mm'){dr();sy()}}
+ else if(a=='mm'){if(k=='sel'){ms=D.n;dr();sy()}else act(k,D)}
+ else if(a=='mx'){try{
+  if(k=='png'){const o=await png();await sv('mindmap-nckh.png',o.b)}
+  else if(k=='svg')await sv('mindmap-nckh.svg',new Blob([msv(1).s],{type:'image/svg+xml'}));
+  else if(k=='doc')await sv('mindmap-nckh.docx',await docx());
+  else if(k=='json')await sv('mindmap-nckh.json',new Blob([JSON.stringify(mm())],{type:'application/json'}));
+  else if(k=='img'){const o=await png();await navigator.clipboard.write([new ClipboardItem({'image/png':o.b})]);toast('Đã sao chép ảnh, dán vào Word hoặc Zalo')}
+ }catch(e){toast('Không xuất được: '+(e&&e.message||'trình duyệt không hỗ trợ'))}}
+ else if(a=='lm'){const l=A('lm');
+  if(k=='add'){const o={};$$('[data-lm]').forEach(e=>{o[e.dataset.lm]=e.value.trim()});if(!o.a)return toast('Hãy nhập ít nhất tác giả và năm');$$('[data-lm]').forEach(e=>{e.value=''});l.push(o);save();rLM()}
+  else if(k=='x'){l.splice(+D.i,1);save();rLM()}
+  else if(k=='cp'){if(!l.length)return toast('Bảng đang trống');ch(`<table border='1' cellspacing='0' cellpadding='4' style='border-collapse:collapse;color:#000'><tr>${LM.map(c=>`<th>${c[1]}</th>`).join('')}</tr>${l.map(r=>`<tr>${LM.map(c=>`<td>${esc(r[c[0]]||'')}</td>`).join('')}</tr>`).join('')}</table>`,[LM.map(c=>c[1])].concat(l.map(r=>LM.map(c=>r[c[0]]||''))).map(x=>x.join(T9)).join(NL))}}
+ else if(a=='bs'){if($('#bso').value)cp($('#bso').value)}});
+document.addEventListener('keydown',e=>{if(!$('#p-mm').classList.contains('on')||/INPUT|TEXTAREA|SELECT|BUTTON/.test(e.target.tagName)||e.ctrlKey||e.metaKey||e.altKey)return;
+ const m={Tab:'add',Enter:'sib',Delete:'del',Backspace:'del'}[e.key];if(!m)return;e.preventDefault();act(m,{})});
+$('#mtx').addEventListener('input',e=>{const n=fn(mm(),ms);if(n){n[0].t=e.target.value||'';dr();save()}});
+$('#p-dp').addEventListener('input',e=>{if(e.target.id=='crt')cr();else if(e.target.classList.contains('bsg'))bs()});
+rLM();cr();bs();dr();sy();
+}catch(e){console.error('NCKH add-on 5',e)}})();
+</script>
+</body>
+</html>
